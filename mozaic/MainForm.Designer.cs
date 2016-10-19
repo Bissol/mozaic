@@ -33,6 +33,9 @@
             this.buttonChangeDir = new System.Windows.Forms.Button();
             this.buttonMakeTiles = new System.Windows.Forms.Button();
             this.buttonBuildMozaic = new System.Windows.Forms.Button();
+            this.buttonChangeImgTarget = new System.Windows.Forms.Button();
+            this.textBoxImgTarget = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -64,7 +67,7 @@
             // 
             // buttonMakeTiles
             // 
-            this.buttonMakeTiles.Location = new System.Drawing.Point(15, 52);
+            this.buttonMakeTiles.Location = new System.Drawing.Point(15, 70);
             this.buttonMakeTiles.Name = "buttonMakeTiles";
             this.buttonMakeTiles.Size = new System.Drawing.Size(98, 23);
             this.buttonMakeTiles.TabIndex = 3;
@@ -74,7 +77,7 @@
             // 
             // buttonBuildMozaic
             // 
-            this.buttonBuildMozaic.Location = new System.Drawing.Point(161, 52);
+            this.buttonBuildMozaic.Location = new System.Drawing.Point(161, 70);
             this.buttonBuildMozaic.Name = "buttonBuildMozaic";
             this.buttonBuildMozaic.Size = new System.Drawing.Size(121, 23);
             this.buttonBuildMozaic.TabIndex = 4;
@@ -82,11 +85,41 @@
             this.buttonBuildMozaic.UseVisualStyleBackColor = true;
             this.buttonBuildMozaic.Click += new System.EventHandler(this.buttonBuildMozaic_Click);
             // 
+            // buttonChangeImgTarget
+            // 
+            this.buttonChangeImgTarget.Location = new System.Drawing.Point(383, 30);
+            this.buttonChangeImgTarget.Name = "buttonChangeImgTarget";
+            this.buttonChangeImgTarget.Size = new System.Drawing.Size(75, 23);
+            this.buttonChangeImgTarget.TabIndex = 7;
+            this.buttonChangeImgTarget.Text = "changer";
+            this.buttonChangeImgTarget.UseVisualStyleBackColor = true;
+            this.buttonChangeImgTarget.Click += new System.EventHandler(this.buttonChangeImgTarget_Click);
+            // 
+            // textBoxImgTarget
+            // 
+            this.textBoxImgTarget.Enabled = false;
+            this.textBoxImgTarget.Location = new System.Drawing.Point(119, 32);
+            this.textBoxImgTarget.Name = "textBoxImgTarget";
+            this.textBoxImgTarget.Size = new System.Drawing.Size(258, 20);
+            this.textBoxImgTarget.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 35);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(67, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Image cible :";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 261);
+            this.Controls.Add(this.buttonChangeImgTarget);
+            this.Controls.Add(this.textBoxImgTarget);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.buttonBuildMozaic);
             this.Controls.Add(this.buttonMakeTiles);
             this.Controls.Add(this.buttonChangeDir);
@@ -106,6 +139,9 @@
         private System.Windows.Forms.Button buttonChangeDir;
         private System.Windows.Forms.Button buttonMakeTiles;
         private System.Windows.Forms.Button buttonBuildMozaic;
+        private System.Windows.Forms.Button buttonChangeImgTarget;
+        private System.Windows.Forms.TextBox textBoxImgTarget;
+        private System.Windows.Forms.Label label2;
     }
 }
 

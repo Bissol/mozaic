@@ -31,7 +31,7 @@ namespace mozaic
             {
                 using (Bitmap bm = new Bitmap(tpath))
                 {
-                    Color c = ImageProcessing.CalculateAverageColor(bm);
+                    List<Color> c = ImageProcessing.CalculateAverageColor(bm, 3);
                 }
                     
             }

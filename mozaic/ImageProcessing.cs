@@ -10,10 +10,16 @@ namespace mozaic
 {
     public class ImageProcessing
     {
-        public static Color CalculateAverageColor(Bitmap bm)
+        public static List<Color> CalculateAverageColor(Bitmap bm, int nbColRow)
         {
+            List<Color> result = new List<Color>();
+            int[] reds = new int[nbColRow * nbColRow];
+            int[] greens = new int[nbColRow * nbColRow];
+            int[] blues = new int[nbColRow * nbColRow];
+
             int width = bm.Width;
             int height = bm.Height;
+            int tileSize = width / nbColRow;
             int red = 0;
             int green = 0;
             int blue = 0;
@@ -34,6 +40,7 @@ namespace mozaic
                 {
                     for (int x = 0; x < width; x++)
                     {
+                        // Global average
                         int idx = (y * stride) + x * bppModifier;
                         red = p[idx + 2];
                         green = p[idx + 1];
@@ -48,6 +55,13 @@ namespace mozaic
                         {
                             dropped++;
                         }
+
+                        // Local average
+                        int bx = (int)Math.Floor((double)x / (double)tileSize);
+                        int by = (int)Math.Floor((double)y / (double)tileSize);
+                        reds[by * nbColRow + bx] += red;
+                        greens[by * nbColRow + bx] += green;
+                        blues[by * nbColRow + bx] += blue;
                     }
                 }
             }
@@ -57,7 +71,22 @@ namespace mozaic
             int avgG = (int)(totals[1] / count);
             int avgB = (int)(totals[0] / count);
 
-            return System.Drawing.Color.FromArgb(avgR, avgG, avgB);
+            result.Add(Color.FromArgb(avgR, avgG, avgB));
+
+            // Local colors
+            int nbpts = tileSize * tileSize;
+            for (int i=0; i<nbColRow; i++)
+            {
+                for (int j = 0; j<nbColRow; j++)
+                {
+                    reds[j * nbColRow + i] = reds[j * nbColRow + i] / nbpts;
+                    greens[j * nbColRow + i] = greens[j * nbColRow + i] / nbpts;
+                    blues[j * nbColRow + i] = blues[j * nbColRow + i] / nbpts;
+                    result.Add(Color.FromArgb(reds[j * nbColRow + i], greens[j * nbColRow + i], blues[j * nbColRow + i]));
+                }
+            }
+
+            return result;
         }
     }
 }

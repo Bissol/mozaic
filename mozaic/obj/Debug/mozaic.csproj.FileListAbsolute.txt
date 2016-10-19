@@ -1,9 +1,0 @@
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\bin\Debug\mozaic.exe.config
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\bin\Debug\mozaic.exe
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\bin\Debug\mozaic.pdb
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\obj\Debug\mozaic.csprojResolveAssemblyReference.cache
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\obj\Debug\mozaic.MainForm.resources
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\obj\Debug\mozaic.Properties.Resources.resources
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\obj\Debug\mozaic.csproj.GenerateResource.Cache
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\obj\Debug\mozaic.exe
-c:\users\steph\documents\visual studio 2015\Projects\mozaic\mozaic\obj\Debug\mozaic.pdb

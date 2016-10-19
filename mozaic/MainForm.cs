@@ -18,6 +18,7 @@ namespace mozaic
         {
             InitializeComponent();
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
+            textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
         }
 
         private void buttonChangeDir_Click(object sender, EventArgs e)
@@ -40,7 +41,29 @@ namespace mozaic
                 Properties.Settings.Default.Save();
             }
 
-            textBoxCurrentDir.Text = folderBrowser.SelectedPath;
+            textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
+        }
+
+        private void buttonChangeImgTarget_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (!String.IsNullOrEmpty(Properties.Settings.Default.ImgTargetPath))
+                {
+                    Properties.Settings.Default.ImgTargetPath = openFileDialog1.FileName;
+                }
+
+                Properties.Settings.Default.ImgTargetPath = openFileDialog1.FileName;
+                Properties.Settings.Default.Save();
+                textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
+            }
         }
 
         private void buttonMakeTiles_Click(object sender, EventArgs e)
@@ -53,5 +76,7 @@ namespace mozaic
             Mozaic moz = new Mozaic(Properties.Settings.Default.LastPath + "/tiles");
             moz.build();
         }
+
+        
     }
 }

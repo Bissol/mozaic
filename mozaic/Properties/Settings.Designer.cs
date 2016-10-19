@@ -34,5 +34,17 @@ namespace mozaic.Properties {
                 this["LastPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ImgTargetPath {
+            get {
+                return ((string)(this["ImgTargetPath"]));
+            }
+            set {
+                this["ImgTargetPath"] = value;
+            }
+        }
     }
 }
