@@ -32,10 +32,13 @@
             this.textBoxCurrentDir = new System.Windows.Forms.TextBox();
             this.buttonChangeDir = new System.Windows.Forms.Button();
             this.buttonMakeTiles = new System.Windows.Forms.Button();
-            this.buttonBuildMozaic = new System.Windows.Forms.Button();
+            this.buttonPrepareData = new System.Windows.Forms.Button();
             this.buttonChangeImgTarget = new System.Windows.Forms.Button();
             this.textBoxImgTarget = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.checkBoxUseColorData = new System.Windows.Forms.CheckBox();
+            this.buttonBuildMozaic = new System.Windows.Forms.Button();
+            this.buttonLoadColorData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -67,7 +70,7 @@
             // 
             // buttonMakeTiles
             // 
-            this.buttonMakeTiles.Location = new System.Drawing.Point(15, 70);
+            this.buttonMakeTiles.Location = new System.Drawing.Point(12, 226);
             this.buttonMakeTiles.Name = "buttonMakeTiles";
             this.buttonMakeTiles.Size = new System.Drawing.Size(98, 23);
             this.buttonMakeTiles.TabIndex = 3;
@@ -75,15 +78,15 @@
             this.buttonMakeTiles.UseVisualStyleBackColor = true;
             this.buttonMakeTiles.Click += new System.EventHandler(this.buttonMakeTiles_Click);
             // 
-            // buttonBuildMozaic
+            // buttonPrepareData
             // 
-            this.buttonBuildMozaic.Location = new System.Drawing.Point(161, 70);
-            this.buttonBuildMozaic.Name = "buttonBuildMozaic";
-            this.buttonBuildMozaic.Size = new System.Drawing.Size(121, 23);
-            this.buttonBuildMozaic.TabIndex = 4;
-            this.buttonBuildMozaic.Text = "Créer mosaïque";
-            this.buttonBuildMozaic.UseVisualStyleBackColor = true;
-            this.buttonBuildMozaic.Click += new System.EventHandler(this.buttonBuildMozaic_Click);
+            this.buttonPrepareData.Location = new System.Drawing.Point(414, 197);
+            this.buttonPrepareData.Name = "buttonPrepareData";
+            this.buttonPrepareData.Size = new System.Drawing.Size(150, 23);
+            this.buttonPrepareData.TabIndex = 4;
+            this.buttonPrepareData.Text = "Préparer les données";
+            this.buttonPrepareData.UseVisualStyleBackColor = true;
+            this.buttonPrepareData.Click += new System.EventHandler(this.buttonPrepareMozaic_Click);
             // 
             // buttonChangeImgTarget
             // 
@@ -112,15 +115,48 @@
             this.label2.TabIndex = 5;
             this.label2.Text = "Image cible :";
             // 
+            // checkBoxUseColorData
+            // 
+            this.checkBoxUseColorData.AutoSize = true;
+            this.checkBoxUseColorData.Location = new System.Drawing.Point(414, 174);
+            this.checkBoxUseColorData.Name = "checkBoxUseColorData";
+            this.checkBoxUseColorData.Size = new System.Drawing.Size(150, 17);
+            this.checkBoxUseColorData.TabIndex = 8;
+            this.checkBoxUseColorData.Text = "Utiliser couleurs existantes";
+            this.checkBoxUseColorData.UseVisualStyleBackColor = true;
+            this.checkBoxUseColorData.CheckedChanged += new System.EventHandler(this.checkBoxUseColorData_CheckedChanged);
+            // 
+            // buttonBuildMozaic
+            // 
+            this.buttonBuildMozaic.Location = new System.Drawing.Point(414, 226);
+            this.buttonBuildMozaic.Name = "buttonBuildMozaic";
+            this.buttonBuildMozaic.Size = new System.Drawing.Size(150, 23);
+            this.buttonBuildMozaic.TabIndex = 9;
+            this.buttonBuildMozaic.Text = "Construire mozaique";
+            this.buttonBuildMozaic.UseVisualStyleBackColor = true;
+            // 
+            // buttonLoadColorData
+            // 
+            this.buttonLoadColorData.Location = new System.Drawing.Point(258, 197);
+            this.buttonLoadColorData.Name = "buttonLoadColorData";
+            this.buttonLoadColorData.Size = new System.Drawing.Size(150, 23);
+            this.buttonLoadColorData.TabIndex = 10;
+            this.buttonLoadColorData.Text = "Charger les données";
+            this.buttonLoadColorData.UseVisualStyleBackColor = true;
+            this.buttonLoadColorData.Click += new System.EventHandler(this.buttonLoadColorData_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 261);
+            this.Controls.Add(this.buttonLoadColorData);
+            this.Controls.Add(this.buttonBuildMozaic);
+            this.Controls.Add(this.checkBoxUseColorData);
             this.Controls.Add(this.buttonChangeImgTarget);
             this.Controls.Add(this.textBoxImgTarget);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.buttonBuildMozaic);
+            this.Controls.Add(this.buttonPrepareData);
             this.Controls.Add(this.buttonMakeTiles);
             this.Controls.Add(this.buttonChangeDir);
             this.Controls.Add(this.textBoxCurrentDir);
@@ -138,10 +174,13 @@
         private System.Windows.Forms.TextBox textBoxCurrentDir;
         private System.Windows.Forms.Button buttonChangeDir;
         private System.Windows.Forms.Button buttonMakeTiles;
-        private System.Windows.Forms.Button buttonBuildMozaic;
+        private System.Windows.Forms.Button buttonPrepareData;
         private System.Windows.Forms.Button buttonChangeImgTarget;
         private System.Windows.Forms.TextBox textBoxImgTarget;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox checkBoxUseColorData;
+        private System.Windows.Forms.Button buttonBuildMozaic;
+        private System.Windows.Forms.Button buttonLoadColorData;
     }
 }
 

@@ -46,5 +46,17 @@ namespace mozaic.Properties {
                 this["ImgTargetPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool useColorData {
+            get {
+                return ((bool)(this["useColorData"]));
+            }
+            set {
+                this["useColorData"] = value;
+            }
+        }
     }
 }

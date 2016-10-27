@@ -13,12 +13,14 @@ namespace mozaic
     public partial class MainForm : Form
     {
         ThumbMaker thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath);
+        Mozaic mozaic;
 
         public MainForm()
         {
             InitializeComponent();
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
             textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
+            checkBoxUseColorData.Checked = Properties.Settings.Default.useColorData;
         }
 
         private void buttonChangeDir_Click(object sender, EventArgs e)
@@ -73,10 +75,24 @@ namespace mozaic
 
         private void buttonBuildMozaic_Click(object sender, EventArgs e)
         {
-            Mozaic moz = new Mozaic(Properties.Settings.Default.LastPath + "/tiles");
-            moz.build();
+            
         }
 
-        
+        private void checkBoxUseColorData_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.useColorData = checkBoxUseColorData.Checked;
+        }
+
+        private void buttonPrepareMozaic_Click(object sender, EventArgs e)
+        {
+            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles");
+            mozaic.prepareData();
+        }
+
+        private void buttonLoadColorData_Click(object sender, EventArgs e)
+        {
+            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles");
+            mozaic.loadData();
+        }
     }
 }
