@@ -20,7 +20,7 @@ namespace mozaic
 
         public void build()
         {
-            // Load tiles paths
+            // Load tiles paths (TODO: load data from file if already computed)
             if (Directory.Exists(this.tilesPath))
             {
                 this.tiles.AddRange(Directory.GetFiles(this.tilesPath));
@@ -33,8 +33,9 @@ namespace mozaic
                 {
                     List<Color> c = ImageProcessing.CalculateAverageColor(bm, 3);
                 }
-                    
             }
+
+            // Load target image
         }
     }
 }
