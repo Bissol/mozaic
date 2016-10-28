@@ -36,9 +36,10 @@
             this.buttonChangeImgTarget = new System.Windows.Forms.Button();
             this.textBoxImgTarget = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.checkBoxUseColorData = new System.Windows.Forms.CheckBox();
             this.buttonBuildMozaic = new System.Windows.Forms.Button();
             this.buttonLoadColorData = new System.Windows.Forms.Button();
+            this.pictureBoxTargetImage = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -70,7 +71,7 @@
             // 
             // buttonMakeTiles
             // 
-            this.buttonMakeTiles.Location = new System.Drawing.Point(12, 226);
+            this.buttonMakeTiles.Location = new System.Drawing.Point(109, 465);
             this.buttonMakeTiles.Name = "buttonMakeTiles";
             this.buttonMakeTiles.Size = new System.Drawing.Size(98, 23);
             this.buttonMakeTiles.TabIndex = 3;
@@ -80,7 +81,7 @@
             // 
             // buttonPrepareData
             // 
-            this.buttonPrepareData.Location = new System.Drawing.Point(414, 197);
+            this.buttonPrepareData.Location = new System.Drawing.Point(511, 436);
             this.buttonPrepareData.Name = "buttonPrepareData";
             this.buttonPrepareData.Size = new System.Drawing.Size(150, 23);
             this.buttonPrepareData.TabIndex = 4;
@@ -115,20 +116,9 @@
             this.label2.TabIndex = 5;
             this.label2.Text = "Image cible :";
             // 
-            // checkBoxUseColorData
-            // 
-            this.checkBoxUseColorData.AutoSize = true;
-            this.checkBoxUseColorData.Location = new System.Drawing.Point(414, 174);
-            this.checkBoxUseColorData.Name = "checkBoxUseColorData";
-            this.checkBoxUseColorData.Size = new System.Drawing.Size(150, 17);
-            this.checkBoxUseColorData.TabIndex = 8;
-            this.checkBoxUseColorData.Text = "Utiliser couleurs existantes";
-            this.checkBoxUseColorData.UseVisualStyleBackColor = true;
-            this.checkBoxUseColorData.CheckedChanged += new System.EventHandler(this.checkBoxUseColorData_CheckedChanged);
-            // 
             // buttonBuildMozaic
             // 
-            this.buttonBuildMozaic.Location = new System.Drawing.Point(414, 226);
+            this.buttonBuildMozaic.Location = new System.Drawing.Point(511, 465);
             this.buttonBuildMozaic.Name = "buttonBuildMozaic";
             this.buttonBuildMozaic.Size = new System.Drawing.Size(150, 23);
             this.buttonBuildMozaic.TabIndex = 9;
@@ -137,7 +127,7 @@
             // 
             // buttonLoadColorData
             // 
-            this.buttonLoadColorData.Location = new System.Drawing.Point(258, 197);
+            this.buttonLoadColorData.Location = new System.Drawing.Point(355, 436);
             this.buttonLoadColorData.Name = "buttonLoadColorData";
             this.buttonLoadColorData.Size = new System.Drawing.Size(150, 23);
             this.buttonLoadColorData.TabIndex = 10;
@@ -145,14 +135,23 @@
             this.buttonLoadColorData.UseVisualStyleBackColor = true;
             this.buttonLoadColorData.Click += new System.EventHandler(this.buttonLoadColorData_Click);
             // 
+            // pictureBoxTargetImage
+            // 
+            this.pictureBoxTargetImage.Location = new System.Drawing.Point(15, 77);
+            this.pictureBoxTargetImage.Name = "pictureBoxTargetImage";
+            this.pictureBoxTargetImage.Size = new System.Drawing.Size(343, 268);
+            this.pictureBoxTargetImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxTargetImage.TabIndex = 11;
+            this.pictureBoxTargetImage.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 261);
+            this.ClientSize = new System.Drawing.Size(673, 500);
+            this.Controls.Add(this.pictureBoxTargetImage);
             this.Controls.Add(this.buttonLoadColorData);
             this.Controls.Add(this.buttonBuildMozaic);
-            this.Controls.Add(this.checkBoxUseColorData);
             this.Controls.Add(this.buttonChangeImgTarget);
             this.Controls.Add(this.textBoxImgTarget);
             this.Controls.Add(this.label2);
@@ -163,6 +162,7 @@
             this.Controls.Add(this.label1);
             this.Name = "MainForm";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,9 +178,9 @@
         private System.Windows.Forms.Button buttonChangeImgTarget;
         private System.Windows.Forms.TextBox textBoxImgTarget;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox checkBoxUseColorData;
         private System.Windows.Forms.Button buttonBuildMozaic;
         private System.Windows.Forms.Button buttonLoadColorData;
+        private System.Windows.Forms.PictureBox pictureBoxTargetImage;
     }
 }
 

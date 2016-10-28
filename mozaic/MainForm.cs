@@ -14,13 +14,13 @@ namespace mozaic
     {
         ThumbMaker thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath);
         Mozaic mozaic;
-
+        
         public MainForm()
         {
             InitializeComponent();
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
             textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
-            checkBoxUseColorData.Checked = Properties.Settings.Default.useColorData;
+            pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
         }
 
         private void buttonChangeDir_Click(object sender, EventArgs e)
@@ -65,6 +65,7 @@ namespace mozaic
                 Properties.Settings.Default.ImgTargetPath = openFileDialog1.FileName;
                 Properties.Settings.Default.Save();
                 textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
+                pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
             }
         }
 
@@ -76,11 +77,6 @@ namespace mozaic
         private void buttonBuildMozaic_Click(object sender, EventArgs e)
         {
             
-        }
-
-        private void checkBoxUseColorData_CheckedChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.useColorData = checkBoxUseColorData.Checked;
         }
 
         private void buttonPrepareMozaic_Click(object sender, EventArgs e)

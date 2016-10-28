@@ -10,9 +10,9 @@ namespace mozaic
 {
     public class ImageProcessing
     {
-        public static List<Color> CalculateAverageColor(Bitmap bm, int nbColRow)
+        public static List<int> CalculateAverageColor(Bitmap bm, int nbColRow)
         {
-            List<Color> result = new List<Color>();
+            List<int> result = new List<int>();
             int[] reds = new int[nbColRow * nbColRow];
             int[] greens = new int[nbColRow * nbColRow];
             int[] blues = new int[nbColRow * nbColRow];
@@ -71,7 +71,7 @@ namespace mozaic
             int avgG = (int)(totals[1] / count);
             int avgB = (int)(totals[0] / count);
 
-            result.Add(Color.FromArgb(avgR, avgG, avgB));
+            result.Add(Color.FromArgb(avgR, avgG, avgB).ToArgb());
 
             // Local colors
             int nbpts = tileSize * tileSize;
@@ -82,7 +82,7 @@ namespace mozaic
                     reds[j * nbColRow + i] = reds[j * nbColRow + i] / nbpts;
                     greens[j * nbColRow + i] = greens[j * nbColRow + i] / nbpts;
                     blues[j * nbColRow + i] = blues[j * nbColRow + i] / nbpts;
-                    result.Add(Color.FromArgb(reds[j * nbColRow + i], greens[j * nbColRow + i], blues[j * nbColRow + i]));
+                    result.Add(Color.FromArgb(reds[j * nbColRow + i], greens[j * nbColRow + i], blues[j * nbColRow + i]).ToArgb());
                 }
             }
 

@@ -20,7 +20,7 @@ namespace mozaic
         {
             if (Directory.Exists(pathToImages))
             {
-                this.images = Directory.GetFiles(pathToImages);
+                this.images = Directory.GetFiles(pathToImages, "*.jpg");
                 this.tilesDir = pathToImages + "/" + "tiles";
 
                 if (!Directory.Exists(pathToImages + "/" + "tiles"))
