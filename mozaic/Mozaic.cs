@@ -20,6 +20,9 @@ namespace mozaic
 
         [ProtoMember(3)]
         public Dictionary<string, List<int>> colorData = new Dictionary<string, List<int>>();
+
+        [ProtoMember(4)]
+        public int matchSize = 3; // Tiles will be divided i*i for comparison
     }
 
     class Mozaic
@@ -44,7 +47,7 @@ namespace mozaic
             {
                 using (Bitmap bm = new Bitmap(tpath))
                 {
-                    List<int> c = ImageProcessing.CalculateAverageColor(bm, 3);
+                    List<int> c = ImageProcessing.CalculateAverageColor(bm, data.matchSize);
                     data.colorData[tpath] = c;
                 }
             }
@@ -83,13 +86,16 @@ namespace mozaic
             {
                 for (int j=0; j< numRow; j++)
                 {
-                    using (petit carré)
-                    tmpColorList = ImageProcessing.CalculateAverageColor(petit carré)
+                    using (Bitmap croppedImage = target.Clone(new Rectangle(i * squareSize, j * squareSize, (i + 1) * squareSize, (j + 1) * squareSize), target.PixelFormat))
+                    {
+                        tmpColorList = ImageProcessing.CalculateAverageColor(croppedImage, data.matchSize);
+                        Color c = new Color.
+                    }
                 }
             }
         }
 
-        private string findBestMatch(Color color)
+        private string findBestMatchSimple(Color color)
         {
             string bestMatchPath = "";
             float minError = 0;
