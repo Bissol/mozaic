@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -89,7 +90,8 @@ namespace mozaic
                     using (Bitmap croppedImage = target.Clone(new Rectangle(i * squareSize, j * squareSize, (i + 1) * squareSize, (j + 1) * squareSize), target.PixelFormat))
                     {
                         tmpColorList = ImageProcessing.CalculateAverageColor(croppedImage, data.matchSize);
-                        Color c = new Color.
+                        Color c = Color.FromArgb(tmpColorList[0]);
+
                     }
                 }
             }
