@@ -17,13 +17,14 @@ namespace mozaic
             int[] greens = new int[nbColRow * nbColRow];
             int[] blues = new int[nbColRow * nbColRow];
 
+            int nbColOrRow = nbColRow;
             int width = bm.Width;
             int height = bm.Height;
-            int tileSize = width / nbColRow;
+            double tileSize = (double)width / (double)nbColRow;
             int red = 0;
             int green = 0;
             int blue = 0;
-            int minDiversion = 15; // drop pixels that do not differ by at least minDiversion between color values (white, gray or black)
+            int minDiversion = 0; // drop pixels that do not differ by at least minDiversion between color values (white, gray or black)
             int dropped = 0; // keep track of dropped pixels
             long[] totals = new long[] { 0, 0, 0 };
             int bppModifier = bm.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb ? 3 : 4; // cutting corners, will fail on anything else but 32 and 24 bit images
@@ -57,8 +58,10 @@ namespace mozaic
                         }
 
                         // Local average
-                        int bx = (int)Math.Floor((double)x / (double)tileSize);
-                        int by = (int)Math.Floor((double)y / (double)tileSize);
+                        int bx = (int)Math.Floor((double)x / tileSize);
+                        if (bx == nbColOrRow) bx--;
+                        int by = (int)Math.Floor((double)y / tileSize);
+                        if (by == nbColOrRow) by--;
                         reds[by * nbColRow + bx] += red;
                         greens[by * nbColRow + bx] += green;
                         blues[by * nbColRow + bx] += blue;
@@ -74,14 +77,17 @@ namespace mozaic
             result.Add(Color.FromArgb(avgR, avgG, avgB).ToArgb());
 
             // Local colors
-            int nbpts = tileSize * tileSize;
+            int nbpts = (int)(tileSize * tileSize);
             for (int i=0; i<nbColRow; i++)
             {
                 for (int j = 0; j<nbColRow; j++)
                 {
                     reds[j * nbColRow + i] = reds[j * nbColRow + i] / nbpts;
+                    if (reds[j * nbColRow + i] > 255) reds[j * nbColRow + i] = 255;
                     greens[j * nbColRow + i] = greens[j * nbColRow + i] / nbpts;
+                    if (greens[j * nbColRow + i] > 255) greens[j * nbColRow + i] = 255;
                     blues[j * nbColRow + i] = blues[j * nbColRow + i] / nbpts;
+                    if (blues[j * nbColRow + i] > 255) blues[j * nbColRow + i] = 255;
                     result.Add(Color.FromArgb(reds[j * nbColRow + i], greens[j * nbColRow + i], blues[j * nbColRow + i]).ToArgb());
                 }
             }

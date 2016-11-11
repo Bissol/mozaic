@@ -124,6 +124,7 @@
             this.buttonBuildMozaic.TabIndex = 9;
             this.buttonBuildMozaic.Text = "Construire mozaique";
             this.buttonBuildMozaic.UseVisualStyleBackColor = true;
+            this.buttonBuildMozaic.Click += new System.EventHandler(this.buttonBuildMozaic_Click_1);
             // 
             // buttonLoadColorData
             // 

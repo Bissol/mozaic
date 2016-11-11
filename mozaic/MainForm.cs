@@ -20,7 +20,7 @@ namespace mozaic
             InitializeComponent();
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
             textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
-            pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
+            if (textBoxImgTarget.Text != "") pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
         }
 
         private void buttonChangeDir_Click(object sender, EventArgs e)
@@ -44,6 +44,7 @@ namespace mozaic
             }
 
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
+            thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath);
         }
 
         private void buttonChangeImgTarget_Click(object sender, EventArgs e)
@@ -89,6 +90,11 @@ namespace mozaic
         {
             mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles");
             mozaic.loadData();
+        }
+
+        private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
+        {
+            mozaic.make();
         }
     }
 }

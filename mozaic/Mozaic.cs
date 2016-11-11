@@ -53,9 +53,6 @@ namespace mozaic
                 }
             }
 
-            // Load target image
-            Bitmap target = new Bitmap(Properties.Settings.Default.ImgTargetPath);
-
             // Save
             saveData();
         }
@@ -77,24 +74,39 @@ namespace mozaic
 
         public void make()
         {
+            int sourceSquareSize = 50;
+            int destinationSquareSize = 80;
             Bitmap target = new Bitmap(Properties.Settings.Default.ImgTargetPath);
-            int squareSize = 50;
-            int numCol = target.Width / squareSize;
-            int numRow = target.Height / squareSize;
+            int numCol = target.Width / sourceSquareSize;
+            int numRow = target.Height / sourceSquareSize;
+
+
+            Bitmap outputImg = new Bitmap(numCol * destinationSquareSize, numRow * destinationSquareSize);
+            Graphics outputGraphic = Graphics.FromImage(outputImg);
+            
             List<int> tmpColorList;
 
             for (int i = 0; i< numCol; i++)
             {
                 for (int j=0; j< numRow; j++)
                 {
-                    using (Bitmap croppedImage = target.Clone(new Rectangle(i * squareSize, j * squareSize, (i + 1) * squareSize, (j + 1) * squareSize), target.PixelFormat))
+                    using (Bitmap croppedImage = target.Clone(new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize), target.PixelFormat))
                     {
                         tmpColorList = ImageProcessing.CalculateAverageColor(croppedImage, data.matchSize);
                         Color c = Color.FromArgb(tmpColorList[0]);
+                        string matchPath = this.findBestMatchSimple(c);
 
+                        // Copy match img to relevant location in output img
+                        using (Bitmap tile = new Bitmap(matchPath))
+                        {
+                            outputGraphic.DrawImage(tile, new Rectangle(i * destinationSquareSize, j * destinationSquareSize, destinationSquareSize, destinationSquareSize));
+                        }
                     }
                 }
             }
+
+            //outputImg = new Bitmap(numCol* destinationSquareSize, numRow* destinationSquareSize, outputGraphic);
+            outputImg.Save(Properties.Settings.Default.LastPath + '/' + "result.png", ImageFormat.Png);
         }
 
         private string findBestMatchSimple(Color color)
