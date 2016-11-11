@@ -13,16 +13,19 @@ namespace mozaic
     [ProtoContract]
     class CollectionData
     {
-        [ProtoMember(1)]
+        [ProtoMember(10)]
         public string tilesPath = "";
 
-        [ProtoMember(2)]
+        [ProtoMember(20)]
         public List<string> tiles = new List<string>();
 
-        [ProtoMember(3)]
+        [ProtoMember(25)]
+        public Dictionary<int, List<string>> fastIndex = new Dictionary<int, List<string>>();
+
+        [ProtoMember(30)]
         public Dictionary<string, List<int>> colorData = new Dictionary<string, List<int>>();
 
-        [ProtoMember(4)]
+        [ProtoMember(40)]
         public int matchSize = 3; // Tiles will be divided i*i for comparison
     }
 
@@ -50,12 +53,30 @@ namespace mozaic
                 {
                     List<int> c = ImageProcessing.CalculateAverageColor(bm, data.matchSize);
                     data.colorData[tpath] = c;
+
+                    // Index for faster retrieval
+                    int index = this.colorToIndex(c[0]);
+                    if (!data.fastIndex.ContainsKey(index)) data.fastIndex[index] = new List<string>();
+                    data.fastIndex[index].Add(tpath);
                 }
             }
 
             // Save
             saveData();
         }
+
+        private int colorToIndex(int color)
+        {
+            int res = 0;
+            int colorIdxQuantization = Properties.Settings.Default.colorIndexQuant;
+            Color rgbc = Color.FromArgb(color);
+            res = rgbc.R / (256 / colorIdxQuantization);
+            res += (rgbc.G / (256 / colorIdxQuantization));
+            res += (rgbc.B / (256 / colorIdxQuantization));
+
+            return res;
+        }
+
         public void saveData()
         {
             using (var file = File.Create(Properties.Settings.Default.LastPath + "/" + "data.bin"))
@@ -74,9 +95,10 @@ namespace mozaic
 
         public void make()
         {
-            int sourceSquareSize = 50;
+            int sourceNumColRow = 30;
             int destinationSquareSize = 80;
             Bitmap target = new Bitmap(Properties.Settings.Default.ImgTargetPath);
+            int sourceSquareSize = target.Width / sourceNumColRow;
             int numCol = target.Width / sourceSquareSize;
             int numRow = target.Height / sourceSquareSize;
 
@@ -115,9 +137,14 @@ namespace mozaic
             float minError = 0;
             Color c;
 
-            foreach (KeyValuePair<string, List<int>> entry in data.colorData)
+            int index = this.colorToIndex(color.ToArgb());
+            List<string> searchList = data.fastIndex.ContainsKey(index) ? data.fastIndex[index] : data.tiles;
+
+            //foreach (KeyValuePair<string, List<int>> entry in data.colorData)
+            foreach(string path in searchList)
             {
-                c = Color.FromArgb(entry.Value[0]);
+                List<int> values = data.colorData[path];
+                c = Color.FromArgb(values[0]);
                 float error = (float)Math.Pow(Math.Abs(color.R - c.R), 2);
                 error += (float)Math.Pow(Math.Abs(color.G - c.G), 2);
                 error += (float)Math.Pow(Math.Abs(color.B - c.B), 2);
@@ -125,7 +152,7 @@ namespace mozaic
                 if (minError == 0 || error < minError)
                 {
                     minError = error;
-                    bestMatchPath = entry.Key;
+                    bestMatchPath = path;
                 }
             }
 

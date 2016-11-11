@@ -58,5 +58,17 @@ namespace mozaic.Properties {
                 this["useColorData"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int colorIndexQuant {
+            get {
+                return ((int)(this["colorIndexQuant"]));
+            }
+            set {
+                this["colorIndexQuant"] = value;
+            }
+        }
     }
 }
