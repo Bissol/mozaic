@@ -91,7 +91,7 @@ namespace mozaic
                     result.Add(Color.FromArgb(reds[j * nbColRow + i], greens[j * nbColRow + i], blues[j * nbColRow + i]).ToArgb());
                 }
             }
-
+            bm.UnlockBits(srcData);
             return result;
         }
     }

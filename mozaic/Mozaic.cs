@@ -105,16 +105,22 @@ namespace mozaic
 
             Bitmap outputImg = new Bitmap(numCol * destinationSquareSize, numRow * destinationSquareSize);
             Graphics outputGraphic = Graphics.FromImage(outputImg);
-            
+
+            Bitmap tmptile = new Bitmap(sourceSquareSize, sourceSquareSize);
+            Graphics grafics = Graphics.FromImage(tmptile);
+
             List<int> tmpColorList;
 
             for (int i = 0; i< numCol; i++)
             {
                 for (int j=0; j< numRow; j++)
                 {
-                    using (Bitmap croppedImage = target.Clone(new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize), target.PixelFormat))
+                    //using (Bitmap croppedImage = target.Clone(new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize), target.PixelFormat))
+                    Rectangle rec = new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize);
+                    grafics.DrawImage(target, 0, 0, rec, GraphicsUnit.Pixel);
+                    //grafics.DrawImage(target, new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize));
                     {
-                        tmpColorList = ImageProcessing.CalculateAverageColor(croppedImage, data.matchSize);
+                        tmpColorList = ImageProcessing.CalculateAverageColor(tmptile, data.matchSize);
                         Color c = Color.FromArgb(tmpColorList[0]);
                         string matchPath = this.findBestMatchSimple(c);
 
