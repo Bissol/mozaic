@@ -95,8 +95,9 @@ namespace mozaic
 
         public void make()
         {
-            int sourceNumColRow = 30;
-            int destinationSquareSize = 80;
+            bool fastSearch = true;
+            int sourceNumColRow = 50;
+            int destinationSquareSize = 70;
             Bitmap target = new Bitmap(Properties.Settings.Default.ImgTargetPath);
             int sourceSquareSize = target.Width / sourceNumColRow;
             int numCol = target.Width / sourceSquareSize;
@@ -115,14 +116,13 @@ namespace mozaic
             {
                 for (int j=0; j< numRow; j++)
                 {
-                    //using (Bitmap croppedImage = target.Clone(new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize), target.PixelFormat))
                     Rectangle rec = new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize);
                     grafics.DrawImage(target, 0, 0, rec, GraphicsUnit.Pixel);
-                    //grafics.DrawImage(target, new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize));
                     {
                         tmpColorList = ImageProcessing.CalculateAverageColor(tmptile, data.matchSize);
                         Color c = Color.FromArgb(tmpColorList[0]);
-                        string matchPath = this.findBestMatchSimple(c);
+                        //string matchPath = this.findBestMatchSimple(c);
+                        string matchPath = this.findBestMatch(tmpColorList, fastSearch);
 
                         // Copy match img to relevant location in output img
                         using (Bitmap tile = new Bitmap(matchPath))
@@ -133,8 +133,52 @@ namespace mozaic
                 }
             }
 
-            //outputImg = new Bitmap(numCol* destinationSquareSize, numRow* destinationSquareSize, outputGraphic);
             outputImg.Save(Properties.Settings.Default.LastPath + '/' + "result.png", ImageFormat.Png);
+        }
+
+        private string findBestMatch(List<int> colorData, bool fastSearch)
+        {
+            string bestMatchPath = "";
+            float minError = 0;
+            float intensityError = 0;
+            Color avgColorSrc = Color.FromArgb(colorData[0]);
+            Color c;
+
+            // Dont search full list if fastSearch enabled
+            int index = this.colorToIndex(colorData[0]);
+            List<string> searchList = fastSearch ? (data.fastIndex.ContainsKey(index) ? data.fastIndex[index] : data.tiles) : data.tiles;
+            
+            foreach (string path in searchList)
+            {
+                List<int> values = data.colorData[path];
+
+                // Error in average color
+                c = Color.FromArgb(values[0]);
+                float error = (float)Math.Pow(Math.Abs(avgColorSrc.R - c.R), 2);
+                error += (float)Math.Pow(Math.Abs(avgColorSrc.G - c.G), 2);
+                error += (float)Math.Pow(Math.Abs(avgColorSrc.B - c.B), 2);
+
+                // Error in intensity map
+                intensityError = 0;
+                for (int i = 1; i< values.Count; i++)
+                {
+                    Color ci = Color.FromArgb(values[i]);
+                    Color ct = Color.FromArgb(colorData[i]);
+                    float dif = Math.Abs(ci.GetBrightness() - ct.GetBrightness());
+                    intensityError += dif * 250;
+                }
+                intensityError = intensityError / (values.Count - 1);
+
+                // Global error
+                float globalError = error + intensityError;
+                if (minError == 0 || globalError < minError)
+                {
+                    minError = globalError;
+                    bestMatchPath = path;
+                }
+            }
+
+            return bestMatchPath;
         }
 
         private string findBestMatchSimple(Color color)
@@ -146,7 +190,6 @@ namespace mozaic
             int index = this.colorToIndex(color.ToArgb());
             List<string> searchList = data.fastIndex.ContainsKey(index) ? data.fastIndex[index] : data.tiles;
 
-            //foreach (KeyValuePair<string, List<int>> entry in data.colorData)
             foreach(string path in searchList)
             {
                 List<int> values = data.colorData[path];

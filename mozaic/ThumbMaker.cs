@@ -41,11 +41,17 @@ namespace mozaic
                         res.Save(this.tilesDir + "/i" + i + ".png", ImageFormat.Png);
 
                         // TEST rotation
-                        Image rotated = ThumbMaker.RotateImage(res, 45, 1.4f);
-                        rotated.Save(this.tilesDir + "/i" + i + "_45" + ".png", ImageFormat.Png);
+                        Image plus45 = ThumbMaker.RotateImage(res, 45, 1.4f);
+                        plus45.Save(this.tilesDir + "/i" + i + "_45" + ".png", ImageFormat.Png);
+                        plus45.Dispose();
 
-                        Image r2 = ThumbMaker.RotateImage(res, 20, 1.3f);
-                        r2.Save(this.tilesDir + "/i" + i + "_20" + ".png", ImageFormat.Png);
+                        Image minus45 = ThumbMaker.RotateImage(res, -45, 1.4f);
+                        minus45.Save(this.tilesDir + "/i" + i + "_-45" + ".png", ImageFormat.Png);
+                        minus45.Dispose();
+
+                        //Image r2 = ThumbMaker.RotateImage(res, 20, 1.3f);
+                        //r2.Save(this.tilesDir + "/i" + i + "_20" + ".png", ImageFormat.Png);
+                        //r2.Dispose();
                     }
                 }
             }

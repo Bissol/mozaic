@@ -20,7 +20,8 @@ namespace mozaic
             InitializeComponent();
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
             textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
-            if (textBoxImgTarget.Text != "") pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
+            bool targetExists = System.IO.File.Exists(textBoxImgTarget.Text);
+            if (textBoxImgTarget.Text != "" && targetExists) pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
         }
 
         private void buttonChangeDir_Click(object sender, EventArgs e)
