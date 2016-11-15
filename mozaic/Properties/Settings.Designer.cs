@@ -70,5 +70,53 @@ namespace mozaic.Properties {
                 this["colorIndexQuant"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int nbColRows {
+            get {
+                return ((int)(this["nbColRows"]));
+            }
+            set {
+                this["nbColRows"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        public int tileSizeResult {
+            get {
+                return ((int)(this["tileSizeResult"]));
+            }
+            set {
+                this["tileSizeResult"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int matchGridSize {
+            get {
+                return ((int)(this["matchGridSize"]));
+            }
+            set {
+                this["matchGridSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string appData {
+            get {
+                return ((string)(this["appData"]));
+            }
+            set {
+                this["appData"] = value;
+            }
+        }
     }
 }

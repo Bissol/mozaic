@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,10 +19,19 @@ namespace mozaic
         public MainForm()
         {
             InitializeComponent();
+
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
             textBoxImgTarget.Text = Properties.Settings.Default.ImgTargetPath;
+            numericUpDownMatchGridSize.Value = Properties.Settings.Default.matchGridSize;
+            numericUpDownNbColRow.Value = Properties.Settings.Default.nbColRows;
+            numericUpDownTileSizeResult.Value = Properties.Settings.Default.tileSizeResult;
+
             bool targetExists = System.IO.File.Exists(textBoxImgTarget.Text);
             if (textBoxImgTarget.Text != "" && targetExists) pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
+
+            string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + '/' + "mozz";
+            if (!Directory.Exists(appdata)) Directory.CreateDirectory(appdata);
+            Properties.Settings.Default.appData = appdata;
         }
 
         private void buttonChangeDir_Click(object sender, EventArgs e)
@@ -52,7 +62,7 @@ namespace mozaic
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.InitialDirectory = Properties.Settings.Default.LastPath;
             openFileDialog1.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
             openFileDialog1.FilterIndex = 2;
             openFileDialog1.RestoreDirectory = true;
@@ -83,19 +93,35 @@ namespace mozaic
 
         private void buttonPrepareMozaic_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles");
+            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles", Properties.Settings.Default.appData);
             mozaic.prepareData();
         }
 
         private void buttonLoadColorData_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles");
+            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles", Properties.Settings.Default.appData);
             mozaic.loadData();
         }
 
         private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
         {
-            mozaic.make();
+            string resultPath = mozaic.make();
+            pictureBoxResult.Image = new Bitmap(resultPath);
+        }
+
+        private void numericUpDownNbColRow_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.nbColRows = (int)numericUpDownNbColRow.Value;
+        }
+
+        private void numericUpDownTileSizeResult_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.tileSizeResult = (int)numericUpDownTileSizeResult.Value;
+        }
+
+        private void numericUpDownMatchGridSize_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.matchGridSize = (int)numericUpDownMatchGridSize.Value;
         }
     }
 }

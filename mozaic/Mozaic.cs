@@ -16,6 +16,9 @@ namespace mozaic
         [ProtoMember(10)]
         public string tilesPath = "";
 
+        [ProtoMember(15)]
+        public string appPath = "";
+
         [ProtoMember(20)]
         public List<string> tiles = new List<string>();
 
@@ -33,9 +36,10 @@ namespace mozaic
     {
         CollectionData data = new CollectionData();
 
-        public Mozaic(string tilesPath)
+        public Mozaic(string tilesPath, string appPath)
         {
             data.tilesPath = tilesPath;
+            data.appPath = appPath;
         }
 
         public void prepareData()
@@ -79,7 +83,7 @@ namespace mozaic
 
         public void saveData()
         {
-            using (var file = File.Create(Properties.Settings.Default.LastPath + "/" + "data.bin"))
+            using (var file = File.Create(data.appPath + "/" + "data.bin"))
             {
                 Serializer.Serialize(file, data);
             }
@@ -87,19 +91,19 @@ namespace mozaic
 
         public void loadData()
         {
-            using (var file = File.OpenRead(Properties.Settings.Default.LastPath + "/" + "data.bin"))
+            using (var file = File.OpenRead(data.appPath + "/" + "data.bin"))
             {
                 data = Serializer.Deserialize<CollectionData>(file);
             }
         }
 
-        public void make()
+        public string make()
         {
             bool fastSearch = true;
-            int sourceNumColRow = 50;
-            int destinationSquareSize = 70;
+            int sourceNumColRow = Properties.Settings.Default.nbColRows;
+            int destinationSquareSize = Properties.Settings.Default.tileSizeResult;
             Bitmap target = new Bitmap(Properties.Settings.Default.ImgTargetPath);
-            int sourceSquareSize = target.Width / sourceNumColRow;
+            int sourceSquareSize = Math.Max(target.Width, target.Height) / sourceNumColRow;
             int numCol = target.Width / sourceSquareSize;
             int numRow = target.Height / sourceSquareSize;
 
@@ -133,7 +137,10 @@ namespace mozaic
                 }
             }
 
-            outputImg.Save(Properties.Settings.Default.LastPath + '/' + "result.png", ImageFormat.Png);
+            string resultImagePath = data.appPath + '/' + "result.png";
+            outputImg.Save(resultImagePath, ImageFormat.Png);
+
+            return resultImagePath;
         }
 
         private string findBestMatch(List<int> colorData, bool fastSearch)

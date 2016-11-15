@@ -20,7 +20,7 @@ namespace mozaic
         {
             if (Directory.Exists(pathToImages))
             {
-                this.images = Directory.GetFiles(pathToImages, "*.jpg");
+                this.images = Directory.GetFiles(pathToImages, "*.jpg", SearchOption.AllDirectories);
                 this.tilesDir = pathToImages + "/" + "tiles";
 
                 if (!Directory.Exists(pathToImages + "/" + "tiles"))
@@ -32,21 +32,23 @@ namespace mozaic
 
         public void Process()
         {
-            for (int i = 0; i < this.images.Length; i++)
+            //for (int i = 0; i < this.images.Length; i++)
+            Parallel.ForEach(this.images, imagePath =>
             {
-                using (Image im = Image.FromFile(this.images[i]))
+                using (Image im = Image.FromFile(imagePath))//this.images[i]))
                 {
                     using (Bitmap res = ThumbMaker.ResizeImage(im, this.thumbSize))
                     {
-                        res.Save(this.tilesDir + "/i" + i + ".png", ImageFormat.Png);
+                        string fname = Path.GetFileNameWithoutExtension(imagePath);
+                        res.Save(this.tilesDir + '/' + fname + "_tile" + ".png", ImageFormat.Png);
 
                         // TEST rotation
                         Image plus45 = ThumbMaker.RotateImage(res, 45, 1.4f);
-                        plus45.Save(this.tilesDir + "/i" + i + "_45" + ".png", ImageFormat.Png);
+                        plus45.Save(this.tilesDir + '/' + fname + "_45" + ".png", ImageFormat.Png);
                         plus45.Dispose();
 
                         Image minus45 = ThumbMaker.RotateImage(res, -45, 1.4f);
-                        minus45.Save(this.tilesDir + "/i" + i + "_-45" + ".png", ImageFormat.Png);
+                        minus45.Save(this.tilesDir + '/' + fname + "_-45" + ".png", ImageFormat.Png);
                         minus45.Dispose();
 
                         //Image r2 = ThumbMaker.RotateImage(res, 20, 1.3f);
@@ -54,7 +56,7 @@ namespace mozaic
                         //r2.Dispose();
                     }
                 }
-            }
+            });
         }
 
         private static Bitmap ResizeImage(Image image, int thumbsize)
