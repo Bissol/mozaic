@@ -177,7 +177,7 @@ namespace mozaic
                 intensityError = intensityError / (values.Count - 1);
 
                 // Global error
-                float globalError = error + intensityError;
+                float globalError = intensityError;
                 if (minError == 0 || globalError < minError)
                 {
                     minError = globalError;

@@ -16,16 +16,16 @@ namespace mozaic
         private string tilesDir = "";
         public int thumbSize = 150;
 
-        public ThumbMaker(string pathToImages)
+        public ThumbMaker(string pathToImages, string pathToTiles)
         {
             if (Directory.Exists(pathToImages))
             {
                 this.images = Directory.GetFiles(pathToImages, "*.jpg", SearchOption.AllDirectories);
-                this.tilesDir = pathToImages + "/" + "tiles";
+                this.tilesDir = pathToTiles;
 
-                if (!Directory.Exists(pathToImages + "/" + "tiles"))
+                if (!Directory.Exists(this.tilesDir))
                 {
-                    Directory.CreateDirectory(pathToImages + "/" + "tiles");
+                    Directory.CreateDirectory(this.tilesDir);
                 }
             }
         }
@@ -40,7 +40,8 @@ namespace mozaic
                     using (Bitmap res = ThumbMaker.ResizeImage(im, this.thumbSize))
                     {
                         string fname = Path.GetFileNameWithoutExtension(imagePath);
-                        res.Save(this.tilesDir + '/' + fname + "_tile" + ".png", ImageFormat.Png);
+                        string p = Path.Combine(this.tilesDir, fname + "_tile" + ".png");
+                        res.Save(p, ImageFormat.Png);
 
                         // TEST rotation
                         Image plus45 = ThumbMaker.RotateImage(res, 45, 1.4f);

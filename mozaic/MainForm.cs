@@ -13,7 +13,7 @@ namespace mozaic
 {
     public partial class MainForm : Form
     {
-        ThumbMaker thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath);
+        ThumbMaker thumbMaker;// = new ThumbMaker(Properties.Settings.Default.LastPath);
         Mozaic mozaic;
         
         public MainForm()
@@ -29,7 +29,7 @@ namespace mozaic
             bool targetExists = System.IO.File.Exists(textBoxImgTarget.Text);
             if (textBoxImgTarget.Text != "" && targetExists) pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
 
-            string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + '/' + "mozz";
+            string appdata = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"mozz");
             if (!Directory.Exists(appdata)) Directory.CreateDirectory(appdata);
             Properties.Settings.Default.appData = appdata;
         }
@@ -55,7 +55,7 @@ namespace mozaic
             }
 
             textBoxCurrentDir.Text = Properties.Settings.Default.LastPath;
-            thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath);
+            //thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath, Properties.Settings.Default + "/tiles");
         }
 
         private void buttonChangeImgTarget_Click(object sender, EventArgs e)
@@ -83,6 +83,7 @@ namespace mozaic
 
         private void buttonMakeTiles_Click(object sender, EventArgs e)
         {
+            this.thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath, Path.Combine(Properties.Settings.Default.appData, "tiles"));
             this.thumbMaker.Process();
         }
 
@@ -93,13 +94,13 @@ namespace mozaic
 
         private void buttonPrepareMozaic_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles", Properties.Settings.Default.appData);
+            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData);
             mozaic.prepareData();
         }
 
         private void buttonLoadColorData_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Properties.Settings.Default.LastPath + "/tiles", Properties.Settings.Default.appData);
+            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData);
             mozaic.loadData();
         }
 
