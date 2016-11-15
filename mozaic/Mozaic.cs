@@ -29,7 +29,7 @@ namespace mozaic
         public Dictionary<string, List<int>> colorData = new Dictionary<string, List<int>>();
 
         [ProtoMember(40)]
-        public int matchSize = 3; // Tiles will be divided i*i for comparison
+        public int matchSize = 4; // Tiles will be divided i*i for comparison
     }
 
     class Mozaic
@@ -139,6 +139,8 @@ namespace mozaic
 
             string resultImagePath = data.appPath + '/' + "result.png";
             outputImg.Save(resultImagePath, ImageFormat.Png);
+            outputGraphic.Dispose();
+            outputImg.Dispose();
 
             return resultImagePath;
         }
@@ -172,12 +174,12 @@ namespace mozaic
                     Color ci = Color.FromArgb(values[i]);
                     Color ct = Color.FromArgb(colorData[i]);
                     float dif = Math.Abs(ci.GetBrightness() - ct.GetBrightness());
-                    intensityError += dif * 250;
-                }
+                    intensityError += dif;
+                };
                 intensityError = intensityError / (values.Count - 1);
 
                 // Global error
-                float globalError = intensityError;
+                float globalError = intensityError ;
                 if (minError == 0 || globalError < minError)
                 {
                     minError = globalError;

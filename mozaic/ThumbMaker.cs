@@ -32,14 +32,14 @@ namespace mozaic
 
         public void Process()
         {
-            //for (int i = 0; i < this.images.Length; i++)
-            Parallel.ForEach(this.images, imagePath =>
+            for (int i = 0; i < this.images.Length; i++)
+            //Parallel.ForEach(this.images, imagePath =>
             {
-                using (Image im = Image.FromFile(imagePath))//this.images[i]))
+                using (Image im = Image.FromFile(this.images[i]))//this.images[i]))
                 {
                     using (Bitmap res = ThumbMaker.ResizeImage(im, this.thumbSize))
                     {
-                        string fname = Path.GetFileNameWithoutExtension(imagePath);
+                        string fname = Path.GetFileNameWithoutExtension(this.images[i]);
                         string p = Path.Combine(this.tilesDir, fname + "_tile" + ".png");
                         res.Save(p, ImageFormat.Png);
 
@@ -55,9 +55,11 @@ namespace mozaic
                         //Image r2 = ThumbMaker.RotateImage(res, 20, 1.3f);
                         //r2.Save(this.tilesDir + "/i" + i + "_20" + ".png", ImageFormat.Png);
                         //r2.Dispose();
+                        res.Dispose();
                     }
+                    im.Dispose();
                 }
-            });
+            }
         }
 
         private static Bitmap ResizeImage(Image image, int thumbsize)
@@ -101,6 +103,8 @@ namespace mozaic
                 {
                     wrapMode.SetWrapMode(WrapMode.TileFlipXY);
                     graphics.DrawImage(image, destRect, x0, y0, w, h, GraphicsUnit.Pixel, wrapMode);
+                    graphics.Dispose();
+                    wrapMode.Dispose();
                 }
             }
 
@@ -136,6 +140,7 @@ namespace mozaic
             {
                 wrapMode.SetWrapMode(WrapMode.TileFlipXY);
                 gfx.DrawImage(img, destRect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, wrapMode);
+                wrapMode.Dispose();
             }
             //gfx.DrawImage(img, new Point(0, 0));
 

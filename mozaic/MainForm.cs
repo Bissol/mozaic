@@ -107,22 +107,29 @@ namespace mozaic
         private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
         {
             string resultPath = mozaic.make();
-            pictureBoxResult.Image = new Bitmap(resultPath);
+
+            FileStream bitmapFile = new FileStream(resultPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            Image loaded = new Bitmap(bitmapFile);
+
+            pictureBoxResult.Image = loaded;
         }
 
         private void numericUpDownNbColRow_ValueChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.nbColRows = (int)numericUpDownNbColRow.Value;
+            Properties.Settings.Default.Save();
         }
 
         private void numericUpDownTileSizeResult_ValueChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.tileSizeResult = (int)numericUpDownTileSizeResult.Value;
+            Properties.Settings.Default.Save();
         }
 
         private void numericUpDownMatchGridSize_ValueChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.matchGridSize = (int)numericUpDownMatchGridSize.Value;
+            Properties.Settings.Default.Save();
         }
     }
 }
