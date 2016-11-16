@@ -41,18 +41,27 @@
             this.pictureBoxTargetImage = new System.Windows.Forms.PictureBox();
             this.pictureBoxResult = new System.Windows.Forms.PictureBox();
             this.Paramètres = new System.Windows.Forms.GroupBox();
-            this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDownTileSizeResult = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.numericUpDownMatchGridSize = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericUpDownTileSizeResult = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericUpDownWRelIntensity = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.numericUpDownWIntensity = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.numericUpDownWRGb = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).BeginInit();
             this.Paramètres.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRelIntensity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWIntensity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRGb)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -170,6 +179,12 @@
             // 
             // Paramètres
             // 
+            this.Paramètres.Controls.Add(this.label6);
+            this.Paramètres.Controls.Add(this.numericUpDownWRelIntensity);
+            this.Paramètres.Controls.Add(this.label7);
+            this.Paramètres.Controls.Add(this.numericUpDownWIntensity);
+            this.Paramètres.Controls.Add(this.label8);
+            this.Paramètres.Controls.Add(this.numericUpDownWRGb);
             this.Paramètres.Controls.Add(this.label5);
             this.Paramètres.Controls.Add(this.numericUpDownMatchGridSize);
             this.Paramètres.Controls.Add(this.label4);
@@ -183,22 +198,22 @@
             this.Paramètres.TabStop = false;
             this.Paramètres.Text = "Paramètres";
             // 
-            // numericUpDownNbColRow
+            // label5
             // 
-            this.numericUpDownNbColRow.Location = new System.Drawing.Point(639, 14);
-            this.numericUpDownNbColRow.Name = "numericUpDownNbColRow";
-            this.numericUpDownNbColRow.Size = new System.Drawing.Size(53, 20);
-            this.numericUpDownNbColRow.TabIndex = 0;
-            this.numericUpDownNbColRow.ValueChanged += new System.EventHandler(this.numericUpDownNbColRow_ValueChanged);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(534, 73);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 13);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Taille grille match";
             // 
-            // label3
+            // numericUpDownMatchGridSize
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(534, 16);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(99, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Nb lignes/colonnes";
+            this.numericUpDownMatchGridSize.Location = new System.Drawing.Point(639, 71);
+            this.numericUpDownMatchGridSize.Name = "numericUpDownMatchGridSize";
+            this.numericUpDownMatchGridSize.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownMatchGridSize.TabIndex = 4;
+            this.numericUpDownMatchGridSize.ValueChanged += new System.EventHandler(this.numericUpDownMatchGridSize_ValueChanged);
             // 
             // label4
             // 
@@ -217,22 +232,73 @@
             this.numericUpDownTileSizeResult.TabIndex = 2;
             this.numericUpDownTileSizeResult.ValueChanged += new System.EventHandler(this.numericUpDownTileSizeResult_ValueChanged);
             // 
-            // label5
+            // label3
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(534, 73);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(88, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Taille grille match";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(534, 16);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(99, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Nb lignes/colonnes";
             // 
-            // numericUpDownMatchGridSize
+            // numericUpDownNbColRow
             // 
-            this.numericUpDownMatchGridSize.Location = new System.Drawing.Point(639, 71);
-            this.numericUpDownMatchGridSize.Name = "numericUpDownMatchGridSize";
-            this.numericUpDownMatchGridSize.Size = new System.Drawing.Size(53, 20);
-            this.numericUpDownMatchGridSize.TabIndex = 4;
-            this.numericUpDownMatchGridSize.ValueChanged += new System.EventHandler(this.numericUpDownMatchGridSize_ValueChanged);
+            this.numericUpDownNbColRow.Location = new System.Drawing.Point(639, 14);
+            this.numericUpDownNbColRow.Name = "numericUpDownNbColRow";
+            this.numericUpDownNbColRow.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownNbColRow.TabIndex = 0;
+            this.numericUpDownNbColRow.ValueChanged += new System.EventHandler(this.numericUpDownNbColRow_ValueChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(355, 73);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(112, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Poids intensité relative";
+            // 
+            // numericUpDownWRelIntensity
+            // 
+            this.numericUpDownWRelIntensity.Location = new System.Drawing.Point(473, 71);
+            this.numericUpDownWRelIntensity.Name = "numericUpDownWRelIntensity";
+            this.numericUpDownWRelIntensity.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownWRelIntensity.TabIndex = 10;
+            this.numericUpDownWRelIntensity.ValueChanged += new System.EventHandler(this.numericUpDownWRelIntensity_ValueChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(392, 46);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(75, 13);
+            this.label7.TabIndex = 9;
+            this.label7.Text = "Poids intensité";
+            // 
+            // numericUpDownWIntensity
+            // 
+            this.numericUpDownWIntensity.Location = new System.Drawing.Point(473, 44);
+            this.numericUpDownWIntensity.Name = "numericUpDownWIntensity";
+            this.numericUpDownWIntensity.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownWIntensity.TabIndex = 8;
+            this.numericUpDownWIntensity.ValueChanged += new System.EventHandler(this.numericUpDownWIntensity_ValueChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(408, 16);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(59, 13);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "Poids RGB";
+            // 
+            // numericUpDownWRGb
+            // 
+            this.numericUpDownWRGb.Location = new System.Drawing.Point(473, 14);
+            this.numericUpDownWRGb.Name = "numericUpDownWRGb";
+            this.numericUpDownWRGb.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownWRGb.TabIndex = 6;
+            this.numericUpDownWRGb.ValueChanged += new System.EventHandler(this.numericUpDownWRGb_ValueChanged);
             // 
             // MainForm
             // 
@@ -258,9 +324,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).EndInit();
             this.Paramètres.ResumeLayout(false);
             this.Paramètres.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRelIntensity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWIntensity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRGb)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -287,6 +356,12 @@
         private System.Windows.Forms.NumericUpDown numericUpDownTileSizeResult;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDownMatchGridSize;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericUpDownWRelIntensity;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numericUpDownWIntensity;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown numericUpDownWRGb;
     }
 }
 

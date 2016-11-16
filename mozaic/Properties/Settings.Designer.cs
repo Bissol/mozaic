@@ -118,5 +118,41 @@ namespace mozaic.Properties {
                 this["appData"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int wRgbErr {
+            get {
+                return ((int)(this["wRgbErr"]));
+            }
+            set {
+                this["wRgbErr"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int wIntErr {
+            get {
+                return ((int)(this["wIntErr"]));
+            }
+            set {
+                this["wIntErr"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int wRelIntErr {
+            get {
+                return ((int)(this["wRelIntErr"]));
+            }
+            set {
+                this["wRelIntErr"] = value;
+            }
+        }
     }
 }

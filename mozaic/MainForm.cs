@@ -25,6 +25,9 @@ namespace mozaic
             numericUpDownMatchGridSize.Value = Properties.Settings.Default.matchGridSize;
             numericUpDownNbColRow.Value = Properties.Settings.Default.nbColRows;
             numericUpDownTileSizeResult.Value = Properties.Settings.Default.tileSizeResult;
+            numericUpDownWRGb.Value = Properties.Settings.Default.wRgbErr;
+            numericUpDownWIntensity.Value = Properties.Settings.Default.wIntErr;
+            numericUpDownWRelIntensity.Value = Properties.Settings.Default.wRelIntErr;
 
             bool targetExists = System.IO.File.Exists(textBoxImgTarget.Text);
             if (textBoxImgTarget.Text != "" && targetExists) pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
@@ -94,18 +97,19 @@ namespace mozaic
 
         private void buttonPrepareMozaic_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData);
+            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.prepareData();
         }
 
         private void buttonLoadColorData_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData);
+            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.loadData();
         }
 
         private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
         {
+            mozaic.setWeight(Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             string resultPath = mozaic.make();
 
             FileStream bitmapFile = new FileStream(resultPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -129,6 +133,24 @@ namespace mozaic
         private void numericUpDownMatchGridSize_ValueChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.matchGridSize = (int)numericUpDownMatchGridSize.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericUpDownWRGb_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.wRgbErr = (int)numericUpDownWRGb.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericUpDownWIntensity_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.wIntErr = (int)numericUpDownWIntensity.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericUpDownWRelIntensity_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.wRelIntErr = (int)numericUpDownWRelIntensity.Value;
             Properties.Settings.Default.Save();
         }
     }

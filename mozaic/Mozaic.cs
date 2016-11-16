@@ -35,11 +35,25 @@ namespace mozaic
     class Mozaic
     {
         CollectionData data = new CollectionData();
+        int weightRGBError;
+        int weightIntensityError;
+        int weightRelativeIntensityError;
 
-        public Mozaic(string tilesPath, string appPath)
+        public Mozaic(string tilesPath, string appPath, int wRgbErr, int wIntensityErr, int wRelIntErr)
         {
             data.tilesPath = tilesPath;
             data.appPath = appPath;
+
+            this.weightIntensityError = weightIntensityError;
+            this.weightRelativeIntensityError = wRelIntErr;
+            this.weightRGBError = weightRGBError;
+        }
+
+        public void setWeight(int wRgbErr, int wIntensityErr, int wRelIntErr)
+        {
+            this.weightIntensityError = weightIntensityError;
+            this.weightRelativeIntensityError = wRelIntErr;
+            this.weightRGBError = weightRGBError;
         }
 
         public void prepareData()
@@ -150,7 +164,9 @@ namespace mozaic
             string bestMatchPath = "";
             float minError = 0;
             float intensityError = 0;
+            float relativeIntensityError = 0;
             Color avgColorSrc = Color.FromArgb(colorData[0]);
+            float avgBrightessSrc = avgColorSrc.GetBrightness();
             Color c;
 
             // Dont search full list if fastSearch enabled
@@ -163,23 +179,28 @@ namespace mozaic
 
                 // Error in average color
                 c = Color.FromArgb(values[0]);
-                float error = (float)Math.Pow(Math.Abs(avgColorSrc.R - c.R), 2);
-                error += (float)Math.Pow(Math.Abs(avgColorSrc.G - c.G), 2);
-                error += (float)Math.Pow(Math.Abs(avgColorSrc.B - c.B), 2);
+                float avgRGBError = Math.Abs(avgColorSrc.R - c.R);
+                avgRGBError += Math.Abs(avgColorSrc.G - c.G);
+                avgRGBError += Math.Abs(avgColorSrc.B - c.B);
 
                 // Error in intensity map
                 intensityError = 0;
+                relativeIntensityError = 0;
+                float avgBrightess = c.GetBrightness();
                 for (int i = 1; i< values.Count; i++)
                 {
                     Color ci = Color.FromArgb(values[i]);
                     Color ct = Color.FromArgb(colorData[i]);
                     float dif = Math.Abs(ci.GetBrightness() - ct.GetBrightness());
+                    float relDif = Math.Abs((ci.GetBrightness() - avgBrightess) - (ct.GetBrightness() - avgBrightessSrc));
                     intensityError += dif;
+                    relativeIntensityError += relDif;
                 };
                 intensityError = intensityError / (values.Count - 1);
+                relativeIntensityError = relativeIntensityError / (values.Count - 1);
 
                 // Global error
-                float globalError = intensityError ;
+                float globalError = this.weightRelativeIntensityError * relativeIntensityError + this.weightRGBError * avgRGBError + this.weightIntensityError * intensityError;
                 if (minError == 0 || globalError < minError)
                 {
                     minError = globalError;
