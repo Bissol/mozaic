@@ -156,7 +156,7 @@ namespace mozaic
                         {
                             // Adjust image for better match? (little cheating)
                             Color matchColor = Color.FromArgb(data.colorData[matchPath][0]);
-                            float brightnessDiff = brightnessCorrectionFactor * (c.GetBrightness() - matchColor.GetBrightness());
+                            float brightnessDiff = this.brightnessCorrectionFactor * (c.GetBrightness() - matchColor.GetBrightness());
                             ImageAttributes imageAttributes = new ImageAttributes();
                             ImageProcessing.SetAdjustmentParams(ref imageAttributes, 1.0f + brightnessDiff, 1.0f, 1.0f);
 
@@ -195,7 +195,7 @@ namespace mozaic
 
                 // Error in average color
                 c = Color.FromArgb(values[0]);
-                float avgRGBError = Math.Abs(c.GetHue() - avgColorSrc.GetHue());
+                float avgRGBError = Math.Abs(c.GetHue() - avgColorSrc.GetHue()) / 360;
                     //Math.Abs(avgColorSrc.R - c.R);
                 //avgRGBError += Math.Abs(avgColorSrc.G - c.G);
                 //avgRGBError += Math.Abs(avgColorSrc.B - c.B);

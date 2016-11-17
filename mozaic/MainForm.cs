@@ -30,6 +30,7 @@ namespace mozaic
             numericUpDownWRelIntensity.Value = (decimal)Properties.Settings.Default.wRelIntErr;
             checkBoxFastSearch.Checked = Properties.Settings.Default.fastSearch;
             numericUpDownBrightnessCorrectionFactor.Value = (decimal)Properties.Settings.Default.brightnessCorrectionFactor;
+            numericUpDownPenaltyReuse.Value = (decimal)Properties.Settings.Default.penaltyReuse;
 
             bool targetExists = System.IO.File.Exists(textBoxImgTarget.Text);
             if (textBoxImgTarget.Text != "" && targetExists) pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
@@ -113,6 +114,9 @@ namespace mozaic
         {
             mozaic.setWeights(Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.useFastIndex = Properties.Settings.Default.fastSearch;
+            mozaic.brightnessCorrectionFactor = Properties.Settings.Default.brightnessCorrectionFactor;
+            mozaic.penaltyReuseFactor = Properties.Settings.Default.penaltyReuse;
+
             string resultPath = mozaic.make();
 
             FileStream bitmapFile = new FileStream(resultPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -166,6 +170,12 @@ namespace mozaic
         private void numericUpDownBrightnessCorrectionFactor_ValueChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.brightnessCorrectionFactor = (int)numericUpDownBrightnessCorrectionFactor.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericUpDownPenaltyReuse_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.penaltyReuse = (int)numericUpDownPenaltyReuse.Value;
             Properties.Settings.Default.Save();
         }
     }
