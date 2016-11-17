@@ -26,13 +26,22 @@
     <Setting Name="appData" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="wRgbErr" Type="System.Int32" Scope="User">
+    <Setting Name="wRgbErr" Type="System.Single" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="wIntErr" Type="System.Int32" Scope="User">
+    <Setting Name="wIntErr" Type="System.Single" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
-    <Setting Name="wRelIntErr" Type="System.Int32" Scope="User">
+    <Setting Name="wRelIntErr" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="fastSearch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="brightnessCorrectionFactor" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="penaltyReuse" Type="System.Single" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>

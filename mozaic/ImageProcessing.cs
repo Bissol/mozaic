@@ -94,5 +94,53 @@ namespace mozaic
             bm.UnlockBits(srcData);
             return result;
         }
+
+        public static Bitmap AdjustImage(Bitmap bmp, float p_brightness, float p_contrast, float p_gamma)
+        {
+            Bitmap originalImage;
+            Bitmap adjustedImage;
+            float brightness = p_brightness;// 1.0f; // no change in brightness
+            float contrast = p_contrast; // 2.0f; // twice the contrast
+            float gamma = p_gamma; // 1.0f; // no change in gamma
+
+            float adjustedBrightness = brightness - 1.0f;
+            float[][] ptsArray ={
+                new float[] {contrast, 0, 0, 0, 0}, // scale red
+                new float[] {0, contrast, 0, 0, 0}, // scale green
+                new float[] {0, 0, contrast, 0, 0}, // scale blue
+                new float[] {0, 0, 0, 1.0f, 0}, // don't scale alpha
+                new float[] {adjustedBrightness, adjustedBrightness, adjustedBrightness, 0, 1}
+            };
+
+            ImageAttributes imageAttributes = new ImageAttributes();
+            imageAttributes.ClearColorMatrix();
+            imageAttributes.SetColorMatrix(new ColorMatrix(ptsArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            imageAttributes.SetGamma(gamma, ColorAdjustType.Bitmap);
+            Graphics g = Graphics.FromImage(bmp);
+            g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, imageAttributes);
+
+            return bmp;
+        }
+
+        public static void SetAdjustmentParams(ref ImageAttributes imageAttributes, float p_brightness, float p_contrast, float p_gamma)
+        {
+            float brightness = p_brightness;// 1.0f; // no change in brightness
+            float contrast = p_contrast; // 2.0f; // twice the contrast
+            float gamma = p_gamma; // 1.0f; // no change in gamma
+
+            float adjustedBrightness = brightness - 1.0f;
+            float[][] ptsArray ={
+                new float[] {contrast, 0, 0, 0, 0}, // scale red
+                new float[] {0, contrast, 0, 0, 0}, // scale green
+                new float[] {0, 0, contrast, 0, 0}, // scale blue
+                new float[] {0, 0, 0, 1.0f, 0}, // don't scale alpha
+                new float[] {adjustedBrightness, adjustedBrightness, adjustedBrightness, 0, 1}
+            };
+
+            
+            imageAttributes.ClearColorMatrix();
+            imageAttributes.SetColorMatrix(new ColorMatrix(ptsArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            imageAttributes.SetGamma(gamma, ColorAdjustType.Bitmap);
+        }
     }
 }

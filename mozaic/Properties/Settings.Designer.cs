@@ -122,9 +122,9 @@ namespace mozaic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int wRgbErr {
+        public float wRgbErr {
             get {
-                return ((int)(this["wRgbErr"]));
+                return ((float)(this["wRgbErr"]));
             }
             set {
                 this["wRgbErr"] = value;
@@ -134,9 +134,9 @@ namespace mozaic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int wIntErr {
+        public float wIntErr {
             get {
-                return ((int)(this["wIntErr"]));
+                return ((float)(this["wIntErr"]));
             }
             set {
                 this["wIntErr"] = value;
@@ -146,12 +146,48 @@ namespace mozaic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int wRelIntErr {
+        public float wRelIntErr {
             get {
-                return ((int)(this["wRelIntErr"]));
+                return ((float)(this["wRelIntErr"]));
             }
             set {
                 this["wRelIntErr"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool fastSearch {
+            get {
+                return ((bool)(this["fastSearch"]));
+            }
+            set {
+                this["fastSearch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float brightnessCorrectionFactor {
+            get {
+                return ((float)(this["brightnessCorrectionFactor"]));
+            }
+            set {
+                this["brightnessCorrectionFactor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float penaltyReuse {
+            get {
+                return ((float)(this["penaltyReuse"]));
+            }
+            set {
+                this["penaltyReuse"] = value;
             }
         }
     }

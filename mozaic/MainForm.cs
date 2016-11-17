@@ -25,9 +25,11 @@ namespace mozaic
             numericUpDownMatchGridSize.Value = Properties.Settings.Default.matchGridSize;
             numericUpDownNbColRow.Value = Properties.Settings.Default.nbColRows;
             numericUpDownTileSizeResult.Value = Properties.Settings.Default.tileSizeResult;
-            numericUpDownWRGb.Value = Properties.Settings.Default.wRgbErr;
-            numericUpDownWIntensity.Value = Properties.Settings.Default.wIntErr;
-            numericUpDownWRelIntensity.Value = Properties.Settings.Default.wRelIntErr;
+            numericUpDownWRGb.Value = (decimal)Properties.Settings.Default.wRgbErr;
+            numericUpDownWIntensity.Value = (decimal)Properties.Settings.Default.wIntErr;
+            numericUpDownWRelIntensity.Value = (decimal)Properties.Settings.Default.wRelIntErr;
+            checkBoxFastSearch.Checked = Properties.Settings.Default.fastSearch;
+            numericUpDownBrightnessCorrectionFactor.Value = (decimal)Properties.Settings.Default.brightnessCorrectionFactor;
 
             bool targetExists = System.IO.File.Exists(textBoxImgTarget.Text);
             if (textBoxImgTarget.Text != "" && targetExists) pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
@@ -109,7 +111,8 @@ namespace mozaic
 
         private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
         {
-            mozaic.setWeight(Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
+            mozaic.setWeights(Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
+            mozaic.useFastIndex = Properties.Settings.Default.fastSearch;
             string resultPath = mozaic.make();
 
             FileStream bitmapFile = new FileStream(resultPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -151,6 +154,18 @@ namespace mozaic
         private void numericUpDownWRelIntensity_ValueChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.wRelIntErr = (int)numericUpDownWRelIntensity.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void checkBoxFastSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.fastSearch = checkBoxFastSearch.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericUpDownBrightnessCorrectionFactor_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.brightnessCorrectionFactor = (int)numericUpDownBrightnessCorrectionFactor.Value;
             Properties.Settings.Default.Save();
         }
     }

@@ -35,11 +35,15 @@ namespace mozaic
     class Mozaic
     {
         CollectionData data = new CollectionData();
-        int weightRGBError;
-        int weightIntensityError;
-        int weightRelativeIntensityError;
+        float weightRGBError;
+        float weightIntensityError;
+        float weightRelativeIntensityError;
+        public float brightnessCorrectionFactor { get; set; }
+        public float penaltyReuseFactor { get; set; }
+        public bool useFastIndex { get; set; }
+        Dictionary<string, int> tilesUsage;
 
-        public Mozaic(string tilesPath, string appPath, int wRgbErr, int wIntensityErr, int wRelIntErr)
+        public Mozaic(string tilesPath, string appPath, float wRgbErr, float wIntensityErr, float wRelIntErr)
         {
             data.tilesPath = tilesPath;
             data.appPath = appPath;
@@ -49,16 +53,16 @@ namespace mozaic
             this.weightRGBError = weightRGBError;
         }
 
-        public void setWeight(int wRgbErr, int wIntensityErr, int wRelIntErr)
+        public void setWeights(float wRgbErr, float wIntensityErr, float wRelIntErr)
         {
-            this.weightIntensityError = weightIntensityError;
+            this.weightIntensityError = wIntensityErr;
             this.weightRelativeIntensityError = wRelIntErr;
-            this.weightRGBError = weightRGBError;
+            this.weightRGBError = wRgbErr;
         }
 
         public void prepareData()
         {
-            // Load tiles paths (TODO: load data from file if already computed)
+            // Load tiles paths
             if (Directory.Exists(data.tilesPath))
             {
                 data.tiles.AddRange(Directory.GetFiles(data.tilesPath));
@@ -113,7 +117,8 @@ namespace mozaic
 
         public string make()
         {
-            bool fastSearch = true;
+            // Moz parameters
+            bool fastSearch = this.useFastIndex;
             int sourceNumColRow = Properties.Settings.Default.nbColRows;
             int destinationSquareSize = Properties.Settings.Default.tileSizeResult;
             Bitmap target = new Bitmap(Properties.Settings.Default.ImgTargetPath);
@@ -121,12 +126,16 @@ namespace mozaic
             int numCol = target.Width / sourceSquareSize;
             int numRow = target.Height / sourceSquareSize;
 
-
+            // Result image
             Bitmap outputImg = new Bitmap(numCol * destinationSquareSize, numRow * destinationSquareSize);
             Graphics outputGraphic = Graphics.FromImage(outputImg);
 
+            // Tile reusable objects
             Bitmap tmptile = new Bitmap(sourceSquareSize, sourceSquareSize);
             Graphics grafics = Graphics.FromImage(tmptile);
+
+            // Tracking tiles usage
+            tilesUsage = new Dictionary<string, int>();
 
             List<int> tmpColorList;
 
@@ -139,13 +148,20 @@ namespace mozaic
                     {
                         tmpColorList = ImageProcessing.CalculateAverageColor(tmptile, data.matchSize);
                         Color c = Color.FromArgb(tmpColorList[0]);
-                        //string matchPath = this.findBestMatchSimple(c);
                         string matchPath = this.findBestMatch(tmpColorList, fastSearch);
+                        if (tilesUsage.ContainsKey(matchPath)) tilesUsage[matchPath] += 1; else tilesUsage[matchPath] = 1;
 
                         // Copy match img to relevant location in output img
                         using (Bitmap tile = new Bitmap(matchPath))
                         {
-                            outputGraphic.DrawImage(tile, new Rectangle(i * destinationSquareSize, j * destinationSquareSize, destinationSquareSize, destinationSquareSize));
+                            // Adjust image for better match? (little cheating)
+                            Color matchColor = Color.FromArgb(data.colorData[matchPath][0]);
+                            float brightnessDiff = brightnessCorrectionFactor * (c.GetBrightness() - matchColor.GetBrightness());
+                            ImageAttributes imageAttributes = new ImageAttributes();
+                            ImageProcessing.SetAdjustmentParams(ref imageAttributes, 1.0f + brightnessDiff, 1.0f, 1.0f);
+
+                            Rectangle destRect = new Rectangle(i * destinationSquareSize, j * destinationSquareSize, destinationSquareSize, destinationSquareSize);
+                            outputGraphic.DrawImage(tile, destRect, 0, 0, tile.Width, tile.Height, GraphicsUnit.Pixel, imageAttributes);
                         }
                     }
                 }
@@ -179,9 +195,10 @@ namespace mozaic
 
                 // Error in average color
                 c = Color.FromArgb(values[0]);
-                float avgRGBError = Math.Abs(avgColorSrc.R - c.R);
-                avgRGBError += Math.Abs(avgColorSrc.G - c.G);
-                avgRGBError += Math.Abs(avgColorSrc.B - c.B);
+                float avgRGBError = Math.Abs(c.GetHue() - avgColorSrc.GetHue());
+                    //Math.Abs(avgColorSrc.R - c.R);
+                //avgRGBError += Math.Abs(avgColorSrc.G - c.G);
+                //avgRGBError += Math.Abs(avgColorSrc.B - c.B);
 
                 // Error in intensity map
                 intensityError = 0;
@@ -199,8 +216,14 @@ namespace mozaic
                 intensityError = intensityError / (values.Count - 1);
                 relativeIntensityError = relativeIntensityError / (values.Count - 1);
 
+                // Re-use penalty
+                float penalty = this.tilesUsage.ContainsKey(path) ? this.tilesUsage[path] : 0;
+
                 // Global error
-                float globalError = this.weightRelativeIntensityError * relativeIntensityError + this.weightRGBError * avgRGBError + this.weightIntensityError * intensityError;
+                float globalError = this.weightRelativeIntensityError * relativeIntensityError +
+                                    this.weightRGBError * avgRGBError +
+                                    this.weightIntensityError * intensityError +
+                                    this.penaltyReuseFactor * penalty;
                 if (minError == 0 || globalError < minError)
                 {
                     minError = globalError;
@@ -211,31 +234,5 @@ namespace mozaic
             return bestMatchPath;
         }
 
-        private string findBestMatchSimple(Color color)
-        {
-            string bestMatchPath = "";
-            float minError = 0;
-            Color c;
-
-            int index = this.colorToIndex(color.ToArgb());
-            List<string> searchList = data.fastIndex.ContainsKey(index) ? data.fastIndex[index] : data.tiles;
-
-            foreach(string path in searchList)
-            {
-                List<int> values = data.colorData[path];
-                c = Color.FromArgb(values[0]);
-                float error = (float)Math.Pow(Math.Abs(color.R - c.R), 2);
-                error += (float)Math.Pow(Math.Abs(color.G - c.G), 2);
-                error += (float)Math.Pow(Math.Abs(color.B - c.B), 2);
-
-                if (minError == 0 || error < minError)
-                {
-                    minError = error;
-                    bestMatchPath = path;
-                }
-            }
-
-            return bestMatchPath;
-        }
     }
 }

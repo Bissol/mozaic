@@ -41,27 +41,31 @@
             this.pictureBoxTargetImage = new System.Windows.Forms.PictureBox();
             this.pictureBoxResult = new System.Windows.Forms.PictureBox();
             this.Paramètres = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDownMatchGridSize = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDownTileSizeResult = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.numericUpDownWRelIntensity = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.numericUpDownWIntensity = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.numericUpDownWRGb = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownMatchGridSize = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericUpDownTileSizeResult = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxFastSearch = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numericUpDownBrightnessCorrectionFactor = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).BeginInit();
             this.Paramètres.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRelIntensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWIntensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRGb)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightnessCorrectionFactor)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -179,6 +183,9 @@
             // 
             // Paramètres
             // 
+            this.Paramètres.Controls.Add(this.label9);
+            this.Paramètres.Controls.Add(this.numericUpDownBrightnessCorrectionFactor);
+            this.Paramètres.Controls.Add(this.checkBoxFastSearch);
             this.Paramètres.Controls.Add(this.label6);
             this.Paramètres.Controls.Add(this.numericUpDownWRelIntensity);
             this.Paramètres.Controls.Add(this.label7);
@@ -197,57 +204,6 @@
             this.Paramètres.TabIndex = 13;
             this.Paramètres.TabStop = false;
             this.Paramètres.Text = "Paramètres";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(534, 73);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(88, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Taille grille match";
-            // 
-            // numericUpDownMatchGridSize
-            // 
-            this.numericUpDownMatchGridSize.Location = new System.Drawing.Point(639, 71);
-            this.numericUpDownMatchGridSize.Name = "numericUpDownMatchGridSize";
-            this.numericUpDownMatchGridSize.Size = new System.Drawing.Size(53, 20);
-            this.numericUpDownMatchGridSize.TabIndex = 4;
-            this.numericUpDownMatchGridSize.ValueChanged += new System.EventHandler(this.numericUpDownMatchGridSize_ValueChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(534, 46);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Taille tuile résultat";
-            // 
-            // numericUpDownTileSizeResult
-            // 
-            this.numericUpDownTileSizeResult.Location = new System.Drawing.Point(639, 44);
-            this.numericUpDownTileSizeResult.Name = "numericUpDownTileSizeResult";
-            this.numericUpDownTileSizeResult.Size = new System.Drawing.Size(53, 20);
-            this.numericUpDownTileSizeResult.TabIndex = 2;
-            this.numericUpDownTileSizeResult.ValueChanged += new System.EventHandler(this.numericUpDownTileSizeResult_ValueChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(534, 16);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(99, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Nb lignes/colonnes";
-            // 
-            // numericUpDownNbColRow
-            // 
-            this.numericUpDownNbColRow.Location = new System.Drawing.Point(639, 14);
-            this.numericUpDownNbColRow.Name = "numericUpDownNbColRow";
-            this.numericUpDownNbColRow.Size = new System.Drawing.Size(53, 20);
-            this.numericUpDownNbColRow.TabIndex = 0;
-            this.numericUpDownNbColRow.ValueChanged += new System.EventHandler(this.numericUpDownNbColRow_ValueChanged);
             // 
             // label6
             // 
@@ -300,6 +256,85 @@
             this.numericUpDownWRGb.TabIndex = 6;
             this.numericUpDownWRGb.ValueChanged += new System.EventHandler(this.numericUpDownWRGb_ValueChanged);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(534, 73);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 13);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Taille grille match";
+            // 
+            // numericUpDownMatchGridSize
+            // 
+            this.numericUpDownMatchGridSize.Location = new System.Drawing.Point(639, 71);
+            this.numericUpDownMatchGridSize.Name = "numericUpDownMatchGridSize";
+            this.numericUpDownMatchGridSize.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownMatchGridSize.TabIndex = 4;
+            this.numericUpDownMatchGridSize.ValueChanged += new System.EventHandler(this.numericUpDownMatchGridSize_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(534, 46);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(91, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Taille tuile résultat";
+            // 
+            // numericUpDownTileSizeResult
+            // 
+            this.numericUpDownTileSizeResult.Location = new System.Drawing.Point(639, 44);
+            this.numericUpDownTileSizeResult.Name = "numericUpDownTileSizeResult";
+            this.numericUpDownTileSizeResult.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownTileSizeResult.TabIndex = 2;
+            this.numericUpDownTileSizeResult.ValueChanged += new System.EventHandler(this.numericUpDownTileSizeResult_ValueChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(534, 16);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(99, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Nb lignes/colonnes";
+            // 
+            // numericUpDownNbColRow
+            // 
+            this.numericUpDownNbColRow.Location = new System.Drawing.Point(639, 14);
+            this.numericUpDownNbColRow.Name = "numericUpDownNbColRow";
+            this.numericUpDownNbColRow.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownNbColRow.TabIndex = 0;
+            this.numericUpDownNbColRow.ValueChanged += new System.EventHandler(this.numericUpDownNbColRow_ValueChanged);
+            // 
+            // checkBoxFastSearch
+            // 
+            this.checkBoxFastSearch.AutoSize = true;
+            this.checkBoxFastSearch.Location = new System.Drawing.Point(235, 17);
+            this.checkBoxFastSearch.Name = "checkBoxFastSearch";
+            this.checkBoxFastSearch.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxFastSearch.TabIndex = 13;
+            this.checkBoxFastSearch.Text = "Tuiles indexées";
+            this.checkBoxFastSearch.UseVisualStyleBackColor = true;
+            this.checkBoxFastSearch.CheckedChanged += new System.EventHandler(this.checkBoxFastSearch_CheckedChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(534, 103);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(104, 13);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "Correction luminosité";
+            // 
+            // numericUpDownBrightnessCorrectionFactor
+            // 
+            this.numericUpDownBrightnessCorrectionFactor.Location = new System.Drawing.Point(639, 101);
+            this.numericUpDownBrightnessCorrectionFactor.Name = "numericUpDownBrightnessCorrectionFactor";
+            this.numericUpDownBrightnessCorrectionFactor.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownBrightnessCorrectionFactor.TabIndex = 14;
+            this.numericUpDownBrightnessCorrectionFactor.ValueChanged += new System.EventHandler(this.numericUpDownBrightnessCorrectionFactor_ValueChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -324,12 +359,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).EndInit();
             this.Paramètres.ResumeLayout(false);
             this.Paramètres.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRelIntensity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWIntensity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRGb)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightnessCorrectionFactor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -362,6 +398,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDownWIntensity;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown numericUpDownWRGb;
+        private System.Windows.Forms.CheckBox checkBoxFastSearch;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numericUpDownBrightnessCorrectionFactor;
     }
 }
 
