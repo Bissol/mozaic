@@ -43,7 +43,7 @@ namespace mozaic
                         string p = Path.Combine(this.tilesDir, fname + "_tile" + ".png");
                         res.Save(p, ImageFormat.Png);
 
-                        // TEST rotation
+                        // 45 degrees
                         Image plus45 = ThumbMaker.RotateImage(res, 45, 1.4f);
                         plus45.Save(this.tilesDir + '/' + fname + "_45" + ".png", ImageFormat.Png);
                         plus45.Dispose();
@@ -51,6 +51,14 @@ namespace mozaic
                         Image minus45 = ThumbMaker.RotateImage(res, -45, 1.4f);
                         minus45.Save(this.tilesDir + '/' + fname + "_-45" + ".png", ImageFormat.Png);
                         minus45.Dispose();
+
+                        Image plus22 = ThumbMaker.RotateImage(res, 22, 1.3f);
+                        plus22.Save(this.tilesDir + '/' + fname + "_22" + ".png", ImageFormat.Png);
+                        plus22.Dispose();
+
+                        Image minus22 = ThumbMaker.RotateImage(res, -22, 1.3f);
+                        minus22.Save(this.tilesDir + '/' + fname + "_-22" + ".png", ImageFormat.Png);
+                        minus22.Dispose();
 
                         //Image r2 = ThumbMaker.RotateImage(res, 20, 1.3f);
                         //r2.Save(this.tilesDir + "/i" + i + "_20" + ".png", ImageFormat.Png);

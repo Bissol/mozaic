@@ -22,6 +22,9 @@ namespace mozaic
         [ProtoMember(20)]
         public List<string> tiles = new List<string>();
 
+        [ProtoMember(23)]
+        public Dictionary<string, List<string>> directories = new Dictionary<string, List<string>>();
+
         [ProtoMember(25)]
         public Dictionary<int, List<string>> fastIndex = new Dictionary<int, List<string>>();
 
@@ -80,6 +83,11 @@ namespace mozaic
                     int index = this.colorToIndex(c[0]);
                     if (!data.fastIndex.ContainsKey(index)) data.fastIndex[index] = new List<string>();
                     data.fastIndex[index].Add(tpath);
+
+                    // Consolidate directories data
+                    string imdir = tpath.Split(Path.DirectorySeparatorChar).Last();
+                    if (!data.directories.ContainsKey(imdir)) data.directories[imdir] = new List<string>();
+                    data.directories[imdir].Add(tpath);
                 }
             }
 
