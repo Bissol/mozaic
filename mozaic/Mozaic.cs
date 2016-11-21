@@ -123,6 +123,11 @@ namespace mozaic
             }
         }
 
+        public List<string> getTileDirectories()
+        {
+            return new List<string>(data.directories.Keys);
+        }
+
         public string make()
         {
             // Moz parameters

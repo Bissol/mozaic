@@ -41,6 +41,8 @@
             this.pictureBoxTargetImage = new System.Windows.Forms.PictureBox();
             this.pictureBoxResult = new System.Windows.Forms.PictureBox();
             this.Paramètres = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numericUpDownPenaltyReuse = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.numericUpDownBrightnessCorrectionFactor = new System.Windows.Forms.NumericUpDown();
             this.checkBoxFastSearch = new System.Windows.Forms.CheckBox();
@@ -56,11 +58,12 @@
             this.numericUpDownTileSizeResult = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numericUpDownPenaltyReuse = new System.Windows.Forms.NumericUpDown();
+            this.checkedListBoxTileCollections = new System.Windows.Forms.CheckedListBox();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).BeginInit();
             this.Paramètres.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltyReuse)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightnessCorrectionFactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRelIntensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWIntensity)).BeginInit();
@@ -68,7 +71,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltyReuse)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -186,6 +188,8 @@
             // 
             // Paramètres
             // 
+            this.Paramètres.Controls.Add(this.label11);
+            this.Paramètres.Controls.Add(this.checkedListBoxTileCollections);
             this.Paramètres.Controls.Add(this.label10);
             this.Paramètres.Controls.Add(this.numericUpDownPenaltyReuse);
             this.Paramètres.Controls.Add(this.label9);
@@ -203,12 +207,29 @@
             this.Paramètres.Controls.Add(this.numericUpDownTileSizeResult);
             this.Paramètres.Controls.Add(this.label3);
             this.Paramètres.Controls.Add(this.numericUpDownNbColRow);
-            this.Paramètres.Location = new System.Drawing.Point(12, 100);
+            this.Paramètres.Location = new System.Drawing.Point(12, 89);
             this.Paramètres.Name = "Paramètres";
-            this.Paramètres.Size = new System.Drawing.Size(843, 157);
+            this.Paramètres.Size = new System.Drawing.Size(843, 177);
             this.Paramètres.TabIndex = 13;
             this.Paramètres.TabStop = false;
             this.Paramètres.Text = "Paramètres";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(368, 101);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(91, 13);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "Pénalité répétition";
+            // 
+            // numericUpDownPenaltyReuse
+            // 
+            this.numericUpDownPenaltyReuse.Location = new System.Drawing.Point(473, 99);
+            this.numericUpDownPenaltyReuse.Name = "numericUpDownPenaltyReuse";
+            this.numericUpDownPenaltyReuse.Size = new System.Drawing.Size(53, 20);
+            this.numericUpDownPenaltyReuse.TabIndex = 16;
+            this.numericUpDownPenaltyReuse.ValueChanged += new System.EventHandler(this.numericUpDownPenaltyReuse_ValueChanged);
             // 
             // label9
             // 
@@ -355,22 +376,22 @@
             this.numericUpDownNbColRow.TabIndex = 0;
             this.numericUpDownNbColRow.ValueChanged += new System.EventHandler(this.numericUpDownNbColRow_ValueChanged);
             // 
-            // label10
+            // checkedListBoxTileCollections
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(368, 101);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(91, 13);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Pénalité répétition";
+            this.checkedListBoxTileCollections.FormattingEnabled = true;
+            this.checkedListBoxTileCollections.Location = new System.Drawing.Point(0, 44);
+            this.checkedListBoxTileCollections.Name = "checkedListBoxTileCollections";
+            this.checkedListBoxTileCollections.Size = new System.Drawing.Size(148, 124);
+            this.checkedListBoxTileCollections.TabIndex = 18;
             // 
-            // numericUpDownPenaltyReuse
+            // label11
             // 
-            this.numericUpDownPenaltyReuse.Location = new System.Drawing.Point(473, 99);
-            this.numericUpDownPenaltyReuse.Name = "numericUpDownPenaltyReuse";
-            this.numericUpDownPenaltyReuse.Size = new System.Drawing.Size(53, 20);
-            this.numericUpDownPenaltyReuse.TabIndex = 16;
-            this.numericUpDownPenaltyReuse.ValueChanged += new System.EventHandler(this.numericUpDownPenaltyReuse_ValueChanged);
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 28);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(99, 13);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "Collections à utiliser";
             // 
             // MainForm
             // 
@@ -396,6 +417,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).EndInit();
             this.Paramètres.ResumeLayout(false);
             this.Paramètres.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltyReuse)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightnessCorrectionFactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWRelIntensity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWIntensity)).EndInit();
@@ -403,7 +425,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchGridSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTileSizeResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNbColRow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltyReuse)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -441,6 +462,8 @@
         private System.Windows.Forms.NumericUpDown numericUpDownBrightnessCorrectionFactor;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown numericUpDownPenaltyReuse;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckedListBox checkedListBoxTileCollections;
     }
 }
 

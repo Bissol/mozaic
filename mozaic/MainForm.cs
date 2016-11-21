@@ -93,21 +93,30 @@ namespace mozaic
             this.thumbMaker.Process();
         }
 
-        private void buttonBuildMozaic_Click(object sender, EventArgs e)
-        {
-            
-        }
-
+        
         private void buttonPrepareMozaic_Click(object sender, EventArgs e)
         {
             mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.prepareData();
+
+            List<string> tileDirs = mozaic.getTileDirectories();
+            foreach(string dir in tileDirs)
+            {
+                checkedListBoxTileCollections.Items.Add(dir);
+            }
+            
         }
 
         private void buttonLoadColorData_Click(object sender, EventArgs e)
         {
             mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.loadData();
+
+            List<string> tileDirs = mozaic.getTileDirectories();
+            foreach (string dir in tileDirs)
+            {
+                checkedListBoxTileCollections.Items.Add(dir);
+            }
         }
 
         private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
