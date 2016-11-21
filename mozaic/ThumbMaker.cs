@@ -15,12 +15,14 @@ namespace mozaic
         private string[] images;
         private string tilesDir = "";
         public int thumbSize = 150;
+        public string _pathToImages;
 
         public ThumbMaker(string pathToImages, string pathToTiles)
         {
-            if (Directory.Exists(pathToImages))
+            _pathToImages = pathToImages;
+            if (Directory.Exists(_pathToImages))
             {
-                this.images = Directory.GetFiles(pathToImages, "*.jpg", SearchOption.AllDirectories);
+                this.images = Directory.GetFiles(_pathToImages, "*.jpg", SearchOption.AllDirectories);
                 this.tilesDir = pathToTiles;
 
                 if (!Directory.Exists(this.tilesDir))
@@ -39,30 +41,30 @@ namespace mozaic
                 {
                     using (Bitmap res = ThumbMaker.ResizeImage(im, this.thumbSize))
                     {
-                        string fname = Path.GetFileNameWithoutExtension(this.images[i]);
-                        string p = Path.Combine(this.tilesDir, fname + "_tile" + ".png");
+                        string dir = Path.GetDirectoryName(this.images[i]);
+                        dir = dir.Replace(this._pathToImages, this.tilesDir);
+                        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                        string fname = Path.Combine(dir, Path.GetFileNameWithoutExtension(this.images[i]));
+                        string p = fname + "_tile" + ".png";
                         res.Save(p, ImageFormat.Png);
 
                         // 45 degrees
                         Image plus45 = ThumbMaker.RotateImage(res, 45, 1.4f);
-                        plus45.Save(this.tilesDir + '/' + fname + "_45" + ".png", ImageFormat.Png);
+                        plus45.Save(fname + "_45" + ".png", ImageFormat.Png);
                         plus45.Dispose();
 
                         Image minus45 = ThumbMaker.RotateImage(res, -45, 1.4f);
-                        minus45.Save(this.tilesDir + '/' + fname + "_-45" + ".png", ImageFormat.Png);
+                        minus45.Save(fname + "_-45" + ".png", ImageFormat.Png);
                         minus45.Dispose();
 
                         Image plus22 = ThumbMaker.RotateImage(res, 22, 1.3f);
-                        plus22.Save(this.tilesDir + '/' + fname + "_22" + ".png", ImageFormat.Png);
+                        plus22.Save(fname + "_22" + ".png", ImageFormat.Png);
                         plus22.Dispose();
 
                         Image minus22 = ThumbMaker.RotateImage(res, -22, 1.3f);
-                        minus22.Save(this.tilesDir + '/' + fname + "_-22" + ".png", ImageFormat.Png);
+                        minus22.Save(fname + "_-22" + ".png", ImageFormat.Png);
                         minus22.Dispose();
-
-                        //Image r2 = ThumbMaker.RotateImage(res, 20, 1.3f);
-                        //r2.Save(this.tilesDir + "/i" + i + "_20" + ".png", ImageFormat.Png);
-                        //r2.Dispose();
+                        
                         res.Dispose();
                     }
                     im.Dispose();

@@ -45,6 +45,7 @@ namespace mozaic
         public float penaltyReuseFactor { get; set; }
         public bool useFastIndex { get; set; }
         Dictionary<string, int> tilesUsage;
+        List<string> tileDirectoriesToUse = null;
 
         public Mozaic(string tilesPath, string appPath, float wRgbErr, float wIntensityErr, float wRelIntErr)
         {
@@ -68,7 +69,7 @@ namespace mozaic
             // Load tiles paths
             if (Directory.Exists(data.tilesPath))
             {
-                data.tiles.AddRange(Directory.GetFiles(data.tilesPath));
+                data.tiles.AddRange(Directory.GetFiles(data.tilesPath, "*.png", SearchOption.AllDirectories));
             }
 
             // Compute tiles stats
@@ -85,7 +86,7 @@ namespace mozaic
                     data.fastIndex[index].Add(tpath);
 
                     // Consolidate directories data
-                    string imdir = tpath.Split(Path.DirectorySeparatorChar).Last();
+                    string imdir = (Path.GetDirectoryName(tpath)).Split(Path.DirectorySeparatorChar).Last();
                     if (!data.directories.ContainsKey(imdir)) data.directories[imdir] = new List<string>();
                     data.directories[imdir].Add(tpath);
                 }
@@ -125,7 +126,12 @@ namespace mozaic
 
         public List<string> getTileDirectories()
         {
-            return new List<string>(data.directories.Keys);
+            return data.directories.Keys.ToList();
+        }
+
+        public void setTileDirectoriesToUse(List<string> dirs)
+        {
+            this.tileDirectoriesToUse = dirs;
         }
 
         public string make()
