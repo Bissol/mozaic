@@ -119,12 +119,14 @@ namespace mozaic
             }
         }
 
+        // MAKE IT
         private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
         {
             mozaic.setWeights(Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.useFastIndex = Properties.Settings.Default.fastSearch;
             mozaic.brightnessCorrectionFactor = Properties.Settings.Default.brightnessCorrectionFactor;
             mozaic.penaltyReuseFactor = Properties.Settings.Default.penaltyReuse;
+            mozaic.setTileDirectoriesToUse(checkedListBoxTileCollections.CheckedItems.OfType<string>().ToList());
 
             string resultPath = mozaic.make();
 

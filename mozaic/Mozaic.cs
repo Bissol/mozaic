@@ -46,6 +46,7 @@ namespace mozaic
         public bool useFastIndex { get; set; }
         Dictionary<string, int> tilesUsage;
         List<string> tileDirectoriesToUse = null;
+        List<string> tilesToUse = null;
 
         public Mozaic(string tilesPath, string appPath, float wRgbErr, float wIntensityErr, float wRelIntErr)
         {
@@ -96,6 +97,33 @@ namespace mozaic
             saveData();
         }
 
+        private void buildIndex()
+        {
+            // Get list of tiles to consider
+            List<string> tmplist = null;
+            if (this.tileDirectoriesToUse == null)
+            {
+                tmplist = data.tiles;
+            }
+            else
+            {
+                foreach(string dir in this.tileDirectoriesToUse)
+                {
+                    tmplist.AddRange(data.directories[dir]);
+                }
+            }
+            this.tilesToUse = tmplist;
+
+            // Actually build index
+            foreach (string tpath in tmplist)
+            {
+                int avgc = data.colorData[tpath][0];
+                int index = this.colorToIndex(avgc);
+                if (!data.fastIndex.ContainsKey(index)) data.fastIndex[index] = new List<string>();
+                data.fastIndex[index].Add(tpath);
+            }
+        }
+
         private int colorToIndex(int color)
         {
             int res = 0;
@@ -132,6 +160,7 @@ namespace mozaic
         public void setTileDirectoriesToUse(List<string> dirs)
         {
             this.tileDirectoriesToUse = dirs;
+            this.buildIndex();
         }
 
         public string make()
@@ -206,7 +235,7 @@ namespace mozaic
 
             // Dont search full list if fastSearch enabled
             int index = this.colorToIndex(colorData[0]);
-            List<string> searchList = fastSearch ? (data.fastIndex.ContainsKey(index) ? data.fastIndex[index] : data.tiles) : data.tiles;
+            List<string> searchList = fastSearch ? (data.fastIndex.ContainsKey(index) ? data.fastIndex[index] : this.tilesToUse) : this.tilesToUse;
             
             foreach (string path in searchList)
             {
