@@ -99,6 +99,9 @@ namespace mozaic
 
         private void buildIndex()
         {
+            // Reset index
+            data.fastIndex = new Dictionary<int, List<string>>();
+
             // Get list of tiles to consider
             List<string> tmplist = null;
             if (this.tileDirectoriesToUse == null)
@@ -107,6 +110,7 @@ namespace mozaic
             }
             else
             {
+                tmplist = new List<string>();
                 foreach(string dir in this.tileDirectoriesToUse)
                 {
                     tmplist.AddRange(data.directories[dir]);

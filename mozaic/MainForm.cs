@@ -107,11 +107,13 @@ namespace mozaic
             
         }
 
+        // Load data from bin file
         private void buttonLoadColorData_Click(object sender, EventArgs e)
         {
             mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.loadData();
 
+            checkedListBoxTileCollections.Items.Clear();
             List<string> tileDirs = mozaic.getTileDirectories();
             foreach (string dir in tileDirs)
             {

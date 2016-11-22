@@ -19,12 +19,14 @@ namespace mozaic
 
         public ThumbMaker(string pathToImages, string pathToTiles)
         {
+            // Load all image path
             _pathToImages = pathToImages;
             if (Directory.Exists(_pathToImages))
             {
                 this.images = Directory.GetFiles(_pathToImages, "*.jpg", SearchOption.AllDirectories);
                 this.tilesDir = pathToTiles;
 
+                // Create tile dir
                 if (!Directory.Exists(this.tilesDir))
                 {
                     Directory.CreateDirectory(this.tilesDir);
@@ -37,14 +39,16 @@ namespace mozaic
             for (int i = 0; i < this.images.Length; i++)
             //Parallel.ForEach(this.images, imagePath =>
             {
+                string dir = Path.GetDirectoryName(this.images[i]);
+                dir = dir.Replace(this._pathToImages, this.tilesDir);
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                string fname = Path.Combine(dir, Path.GetFileNameWithoutExtension(this.images[i]));
+                if (File.Exists(fname + "_tile" + ".png")) continue;
+
                 using (Image im = Image.FromFile(this.images[i]))//this.images[i]))
                 {
                     using (Bitmap res = ThumbMaker.ResizeImage(im, this.thumbSize))
                     {
-                        string dir = Path.GetDirectoryName(this.images[i]);
-                        dir = dir.Replace(this._pathToImages, this.tilesDir);
-                        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                        string fname = Path.Combine(dir, Path.GetFileNameWithoutExtension(this.images[i]));
                         string p = fname + "_tile" + ".png";
                         res.Save(p, ImageFormat.Png);
 
