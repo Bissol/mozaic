@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mozaic", "mozaic\mozaic.csproj", "{3AB323D4-9445-43E2-96AB-1F4BD57DAE14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestMozz", "UnitTestMozz\UnitTestMozz.csproj", "{B45C97D0-8EBD-46A6-A341-A8BFD8F52700}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3AB323D4-9445-43E2-96AB-1F4BD57DAE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AB323D4-9445-43E2-96AB-1F4BD57DAE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AB323D4-9445-43E2-96AB-1F4BD57DAE14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B45C97D0-8EBD-46A6-A341-A8BFD8F52700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B45C97D0-8EBD-46A6-A341-A8BFD8F52700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B45C97D0-8EBD-46A6-A341-A8BFD8F52700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B45C97D0-8EBD-46A6-A341-A8BFD8F52700}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

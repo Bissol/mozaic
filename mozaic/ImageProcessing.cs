@@ -142,5 +142,29 @@ namespace mozaic
             imageAttributes.SetColorMatrix(new ColorMatrix(ptsArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
             imageAttributes.SetGamma(gamma, ColorAdjustType.Bitmap);
         }
+
+        public static void MergeEdgesVertical(ref Bitmap bmp, int xpos, int mergeSize)
+        {
+            BitmapData data = bmp.LockBits(new Rectangle(xpos - mergeSize, 0, 2 * mergeSize, bmp.Height), ImageLockMode.ReadWrite, bmp.PixelFormat);
+            int stride = data.Stride;
+            unsafe
+            {
+                byte* ptr = (byte*)data.Scan0;
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    for (int x = 0; x < 2 * mergeSize; x++)
+                    {
+                        // Get current color
+                        // Get merge color (symetry)
+                        // Get merge factor f(x)
+                        // Merge
+                        // Write result
+                        ptr[(x * 3) + y * stride] = 0;
+                        ptr[(x * 3) + y * stride + 1] =0;
+                        ptr[(x * 3) + y * stride + 2] = 0;
+                    }
+                }
+            }
+        }
     }
 }
