@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -147,21 +148,45 @@ namespace mozaic
         {
             BitmapData data = bmp.LockBits(new Rectangle(xpos - mergeSize, 0, 2 * mergeSize, bmp.Height), ImageLockMode.ReadWrite, bmp.PixelFormat);
             int stride = data.Stride;
+            int bppModifier = bmp.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb ? 3 : 4;
+            int red, green, blue = 0;
+            int red2, green2, blue2 = 0;
             unsafe
             {
                 byte* ptr = (byte*)data.Scan0;
+                //int length = Math.Abs(stride) * bmp.Height;
+                //byte[] copy = new byte[length];
+                //Marshal.Copy(data.Scan0, copy, 0, length);
                 for (int y = 0; y < bmp.Height; y++)
                 {
                     for (int x = 0; x < 2 * mergeSize; x++)
                     {
-                        // Get current color
+                        // Get x,y color
+                        int idx = (y * stride) + x * bppModifier;
+                        red = ptr[idx + 2];
+                        green = ptr[idx + 1];
+                        blue = ptr[idx];
+
                         // Get merge color (symetry)
+                        int symidx = (y * stride) + (x>mergeSize ? (mergeSize - (x - mergeSize)) : mergeSize+(mergeSize-x)) * bppModifier;
+                        red2 = ptr[symidx + 2];
+                        green2 = ptr[symidx + 1];
+                        blue2 = ptr[symidx];
+
                         // Get merge factor f(x)
+                        float localPixWeight =  Math.Abs((float)x - (float)mergeSize) / (float)mergeSize;
+                        if (x > mergeSize) localPixWeight = 1;// 1.0f / localPixWeight;
+                        float symPixWeight = 1.0F - localPixWeight;
+
                         // Merge
+                        red = (int)(localPixWeight * (float)red + symPixWeight * (float)red2);
+                        green = (int)(localPixWeight * (float)green + symPixWeight * (float)green2);
+                        blue = (int)(localPixWeight * (float)blue + symPixWeight * (float)blue2);
+
                         // Write result
-                        ptr[(x * 3) + y * stride] = 0;
-                        ptr[(x * 3) + y * stride + 1] =0;
-                        ptr[(x * 3) + y * stride + 2] = 0;
+                        ptr[(x * bppModifier) + y * stride] = (byte)blue;
+                        ptr[(x * bppModifier) + y * stride + 1] = (byte)green;
+                        ptr[(x * bppModifier) + y * stride + 2] = (byte)red;
                     }
                 }
             }

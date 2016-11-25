@@ -12,7 +12,7 @@ namespace UnitTestMozz
         public void TestMethod1()
         {
             Bitmap bmp = UnitTestMozz.Properties.Resources.test;
-            ImageProcessing.MergeEdgesVertical(ref bmp, 150, 10);
+            ImageProcessing.MergeEdgesVertical(ref bmp, 150, 30);
             bmp.Save("test1.png");
         }
     }
