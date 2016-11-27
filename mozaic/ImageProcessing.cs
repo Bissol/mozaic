@@ -154,9 +154,14 @@ namespace mozaic
             unsafe
             {
                 byte* ptr = (byte*)data.Scan0;
-                //int length = Math.Abs(stride) * bmp.Height;
-                //byte[] copy = new byte[length];
-                //Marshal.Copy(data.Scan0, copy, 0, length);
+                int length = bmp.Height * 2 * mergeSize;
+                byte[] copy = new byte[length];
+                Marshal.Copy(data.Scan0, copy, 0, length);
+
+                // Get image smoothness
+                float[] smoothness = new float[length];
+                ImageProcessing.computeSmoothnessMap(ref smoothness, stride, bppModifier, 2 * mergeSize, bmp.Height, copy, 5);
+
                 for (int y = 0; y < bmp.Height; y++)
                 {
                     for (int x = 0; x < 2 * mergeSize; x++)
@@ -191,5 +196,58 @@ namespace mozaic
                 }
             }
         }
+
+        private static void computeAvgMap(ref float[] map, int stride, int bppModifier, int width, int height, byte[] src, int matrixHalfSize)
+        {
+            float[] rgb = new float[3];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    // Get average for pixel x,y
+                    ImageProcessing.getAvgForPixel(ref rgb, x, y, stride, bppModifier, width, height, src, matrixHalfSize);
+                    todo: getAvgForPixel avg intensity, not rgb
+                }
+            }
+        }
+
+        private static void getAvgForPixel(ref float[] rgb, int x0, int y0, int stride, int bppModifier, int width, int height, byte[] src, int matrixHalfSize)
+        {
+            rgb[0] = 0f;
+            rgb[1] = 0f;
+            rgb[2] = 0f;
+            int count = 0;
+            for (int y = y0 - matrixHalfSize; y < y0 + matrixHalfSize; y++)
+            {
+                for (int x = x0 - matrixHalfSize; x < x0 + matrixHalfSize; x++)
+                {
+                    if (x < 0 || x >= width || y < 0 || y >= height) continue;
+                    count++;
+
+                    // Get x,y color
+                    int idx = (y * stride) + x * bppModifier;
+                    rgb[0] += src[idx + 2];
+                    rgb[1] = src[idx + 1];
+                    rgb[2] = src[idx];
+                }
+            }
+
+            rgb[0] = rgb[0] / count;
+            rgb[1] = rgb[1] / count;
+            rgb[2] = rgb[2] / count;
+        }
+
+        private static void computeSmoothnessMap(ref float[] map, int stride, int bppModifier, int width, int height, byte[] src, int matrixHalfSize)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    // Get smoothness for pixel x,y
+                }
+            }
+        }
+
     }
 }
