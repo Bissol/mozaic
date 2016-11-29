@@ -146,7 +146,7 @@ namespace mozaic
 
         public static void MergeEdgesVertical(ref Bitmap bmp, int xpos, int mergeSize)
         {
-            BitmapData data = bmp.LockBits(new Rectangle(xpos - mergeSize, 0, 2 * mergeSize, bmp.Height), ImageLockMode.ReadWrite, bmp.PixelFormat);
+            BitmapData data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadWrite, bmp.PixelFormat);
             int stride = data.Stride;
             int bppModifier = bmp.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb ? 3 : 4;
             int red, green, blue = 0;
@@ -154,17 +154,23 @@ namespace mozaic
             unsafe
             {
                 byte* ptr = (byte*)data.Scan0;
-                int length = bmp.Height * 2 * mergeSize;
+
+                // Make a copy
+                int length = Math.Abs(data.Stride) * data.Height;
                 byte[] copy = new byte[length];
-                Marshal.Copy(data.Scan0, copy, 0, length);
+                Marshal.Copy(data.Scan0, copy, 0, copy.Length);
+
+                // Compute average
+                float[] averageMap = new float[length];
+                ImageProcessing.computeAvgMap(ref averageMap, stride, bppModifier, bmp.Width, bmp.Height, copy, 5);
 
                 // Get image smoothness
                 float[] smoothness = new float[length];
-                ImageProcessing.computeSmoothnessMap(ref smoothness, stride, bppModifier, 2 * mergeSize, bmp.Height, copy, 5);
+                ImageProcessing.computeSmoothnessMap(ref smoothness, stride, bppModifier, bmp.Width, bmp.Height, copy, 5);
 
                 for (int y = 0; y < bmp.Height; y++)
                 {
-                    for (int x = 0; x < 2 * mergeSize; x++)
+                    for (int x = xpos - mergeSize; x < xpos + mergeSize; x++)
                     {
                         // Get x,y color
                         int idx = (y * stride) + x * bppModifier;
@@ -188,6 +194,7 @@ namespace mozaic
                         green = (int)(localPixWeight * (float)green + symPixWeight * (float)green2);
                         blue = (int)(localPixWeight * (float)blue + symPixWeight * (float)blue2);
 
+                        //red = (int)averageMap[y * bmp.Width + x];
                         // Write result
                         ptr[(x * bppModifier) + y * stride] = (byte)blue;
                         ptr[(x * bppModifier) + y * stride + 1] = (byte)green;
@@ -199,24 +206,20 @@ namespace mozaic
 
         private static void computeAvgMap(ref float[] map, int stride, int bppModifier, int width, int height, byte[] src, int matrixHalfSize)
         {
-            float[] rgb = new float[3];
-
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     // Get average for pixel x,y
-                    ImageProcessing.getAvgForPixel(ref rgb, x, y, stride, bppModifier, width, height, src, matrixHalfSize);
-                    todo: getAvgForPixel avg intensity, not rgb
+                    float intensity = ImageProcessing.getAvgForPixel(x, y, stride, bppModifier, width, height, src, matrixHalfSize);
+                    map[y * width + x] = intensity;
                 }
             }
         }
 
-        private static void getAvgForPixel(ref float[] rgb, int x0, int y0, int stride, int bppModifier, int width, int height, byte[] src, int matrixHalfSize)
+        private static float getAvgForPixel(int x0, int y0, int stride, int bppModifier, int width, int height, byte[] src, int matrixHalfSize)
         {
-            rgb[0] = 0f;
-            rgb[1] = 0f;
-            rgb[2] = 0f;
+            float intensity = 0f;
             int count = 0;
             for (int y = y0 - matrixHalfSize; y < y0 + matrixHalfSize; y++)
             {
@@ -227,15 +230,11 @@ namespace mozaic
 
                     // Get x,y color
                     int idx = (y * stride) + x * bppModifier;
-                    rgb[0] += src[idx + 2];
-                    rgb[1] = src[idx + 1];
-                    rgb[2] = src[idx];
+                    intensity += (src[idx + 2] + src[idx + 1] + src[idx] )/ 3;
                 }
             }
 
-            rgb[0] = rgb[0] / count;
-            rgb[1] = rgb[1] / count;
-            rgb[2] = rgb[2] / count;
+            return intensity / count;
         }
 
         private static void computeSmoothnessMap(ref float[] map, int stride, int bppModifier, int width, int height, byte[] src, int matrixHalfSize)
