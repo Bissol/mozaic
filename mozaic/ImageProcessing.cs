@@ -178,8 +178,8 @@ namespace mozaic
                     dirIsRight = smoothleft < smoothright;
 
                     // Determine a 'stop'
-                    use avg?
-                        do it both ways
+                   // use avg?
+                   //     do it both ways
                     int stopx = xpos;
                     for (int sx = xpos + smoothness; sx < xpos + mergeSize; sx++)
                     {

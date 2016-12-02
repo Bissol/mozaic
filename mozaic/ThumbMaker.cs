@@ -36,16 +36,16 @@ namespace mozaic
 
         public void Process()
         {
-            for (int i = 0; i < this.images.Length; i++)
-            //Parallel.ForEach(this.images, imagePath =>
+            //for (int i = 0; i < this.images.Length; i++)
+            Parallel.ForEach(this.images, imagePath =>
             {
-                string dir = Path.GetDirectoryName(this.images[i]);
+                string dir = Path.GetDirectoryName(imagePath);// this.images[i]);
                 dir = dir.Replace(this._pathToImages, this.tilesDir);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                string fname = Path.Combine(dir, Path.GetFileNameWithoutExtension(this.images[i]));
-                if (File.Exists(fname + "_tile" + ".png")) continue;
+                string fname = Path.Combine(dir, Path.GetFileNameWithoutExtension(imagePath));//this.images[i]));
+                if (File.Exists(fname + "_tile" + ".png")) return;// continue;
 
-                using (Image im = Image.FromFile(this.images[i]))//this.images[i]))
+                using (Image im = Image.FromFile(imagePath))//this.images[i]))
                 {
                     using (Bitmap res = ThumbMaker.ResizeImage(im, this.thumbSize))
                     {
@@ -68,12 +68,12 @@ namespace mozaic
                         Image minus22 = ThumbMaker.RotateImage(res, -22, 1.3f);
                         minus22.Save(fname + "_-22" + ".png", ImageFormat.Png);
                         minus22.Dispose();
-                        
+
                         res.Dispose();
                     }
                     im.Dispose();
                 }
-            }
+            });
         }
 
         private static Bitmap ResizeImage(Image image, int thumbsize)
