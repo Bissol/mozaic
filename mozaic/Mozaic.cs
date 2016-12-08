@@ -167,7 +167,7 @@ namespace mozaic
             this.buildIndex();
         }
 
-        public string make()
+        public string make(IProgress<int> progress)
         {
             // Moz parameters
             bool fastSearch = this.useFastIndex;
@@ -190,11 +190,16 @@ namespace mozaic
             tilesUsage = new Dictionary<string, int>();
 
             List<int> tmpColorList;
-
+            float total = numCol * numRow;
+            float count = 0;
             for (int i = 0; i< numCol; i++)
             {
                 for (int j=0; j< numRow; j++)
                 {
+                    count++;
+                    Random rnd = new Random();
+                    int percent = (int)((count / total) * 100f);
+                    progress.Report(percent);
                     Rectangle rec = new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize);
                     grafics.DrawImage(target, 0, 0, rec, GraphicsUnit.Pixel);
                     {
@@ -208,7 +213,7 @@ namespace mozaic
                         {
                             // Adjust image for better match? (little cheating)
                             Color matchColor = Color.FromArgb(data.colorData[matchPath][0]);
-                            float brightnessDiff = this.brightnessCorrectionFactor * (c.GetBrightness() - matchColor.GetBrightness());
+                            float brightnessDiff = (this.brightnessCorrectionFactor / 10f) * (c.GetBrightness() - matchColor.GetBrightness());
                             ImageAttributes imageAttributes = new ImageAttributes();
                             ImageProcessing.SetAdjustmentParams(ref imageAttributes, 1.0f + brightnessDiff, 1.0f, 1.0f);
 
@@ -240,15 +245,16 @@ namespace mozaic
             // Dont search full list if fastSearch enabled
             int index = this.colorToIndex(colorData[0]);
             List<string> searchList = fastSearch ? (data.fastIndex.ContainsKey(index) ? data.fastIndex[index] : this.tilesToUse) : this.tilesToUse;
-            
+
             foreach (string path in searchList)
+            //Parallel.ForEach(searchList, (path) =>
             {
                 List<int> values = data.colorData[path];
 
                 // Error in average color
                 c = Color.FromArgb(values[0]);
                 float avgRGBError = Math.Abs(c.GetHue() - avgColorSrc.GetHue()) / 360;
-                    //Math.Abs(avgColorSrc.R - c.R);
+                //Math.Abs(avgColorSrc.R - c.R);
                 //avgRGBError += Math.Abs(avgColorSrc.G - c.G);
                 //avgRGBError += Math.Abs(avgColorSrc.B - c.B);
 
@@ -256,7 +262,7 @@ namespace mozaic
                 intensityError = 0;
                 relativeIntensityError = 0;
                 float avgBrightess = c.GetBrightness();
-                for (int i = 1; i< values.Count; i++)
+                for (int i = 1; i < values.Count; i++)
                 {
                     Color ci = Color.FromArgb(values[i]);
                     Color ct = Color.FromArgb(colorData[i]);
@@ -275,7 +281,7 @@ namespace mozaic
                 float globalError = this.weightRelativeIntensityError * relativeIntensityError +
                                     this.weightRGBError * avgRGBError +
                                     this.weightIntensityError * intensityError +
-                                    this.penaltyReuseFactor * penalty;
+                                    (this.penaltyReuseFactor / 10f) * penalty;
                 if (minError == 0 || globalError < minError)
                 {
                     minError = globalError;

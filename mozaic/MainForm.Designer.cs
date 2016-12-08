@@ -41,6 +41,8 @@
             this.pictureBoxTargetImage = new System.Windows.Forms.PictureBox();
             this.pictureBoxResult = new System.Windows.Forms.PictureBox();
             this.Paramètres = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.checkedListBoxTileCollections = new System.Windows.Forms.CheckedListBox();
             this.label10 = new System.Windows.Forms.Label();
             this.numericUpDownPenaltyReuse = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
@@ -58,8 +60,7 @@
             this.numericUpDownTileSizeResult = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
-            this.checkedListBoxTileCollections = new System.Windows.Forms.CheckedListBox();
-            this.label11 = new System.Windows.Forms.Label();
+            this.progressBarMakeMozaic = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).BeginInit();
             this.Paramètres.SuspendLayout();
@@ -213,6 +214,23 @@
             this.Paramètres.TabIndex = 13;
             this.Paramètres.TabStop = false;
             this.Paramètres.Text = "Paramètres";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 28);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(99, 13);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "Collections à utiliser";
+            // 
+            // checkedListBoxTileCollections
+            // 
+            this.checkedListBoxTileCollections.FormattingEnabled = true;
+            this.checkedListBoxTileCollections.Location = new System.Drawing.Point(0, 44);
+            this.checkedListBoxTileCollections.Name = "checkedListBoxTileCollections";
+            this.checkedListBoxTileCollections.Size = new System.Drawing.Size(148, 124);
+            this.checkedListBoxTileCollections.TabIndex = 18;
             // 
             // label10
             // 
@@ -376,28 +394,20 @@
             this.numericUpDownNbColRow.TabIndex = 0;
             this.numericUpDownNbColRow.ValueChanged += new System.EventHandler(this.numericUpDownNbColRow_ValueChanged);
             // 
-            // checkedListBoxTileCollections
+            // progressBarMakeMozaic
             // 
-            this.checkedListBoxTileCollections.FormattingEnabled = true;
-            this.checkedListBoxTileCollections.Location = new System.Drawing.Point(0, 44);
-            this.checkedListBoxTileCollections.Name = "checkedListBoxTileCollections";
-            this.checkedListBoxTileCollections.Size = new System.Drawing.Size(148, 124);
-            this.checkedListBoxTileCollections.TabIndex = 18;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 28);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(99, 13);
-            this.label11.TabIndex = 19;
-            this.label11.Text = "Collections à utiliser";
+            this.progressBarMakeMozaic.Location = new System.Drawing.Point(6, 561);
+            this.progressBarMakeMozaic.Name = "progressBarMakeMozaic";
+            this.progressBarMakeMozaic.Size = new System.Drawing.Size(861, 17);
+            this.progressBarMakeMozaic.Step = 1;
+            this.progressBarMakeMozaic.TabIndex = 14;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(867, 552);
+            this.ClientSize = new System.Drawing.Size(867, 576);
+            this.Controls.Add(this.progressBarMakeMozaic);
             this.Controls.Add(this.Paramètres);
             this.Controls.Add(this.pictureBoxResult);
             this.Controls.Add(this.pictureBoxTargetImage);
@@ -464,6 +474,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownPenaltyReuse;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckedListBox checkedListBoxTileCollections;
+        private System.Windows.Forms.ProgressBar progressBarMakeMozaic;
     }
 }
 

@@ -178,10 +178,8 @@ namespace mozaic
                     dirIsRight = smoothleft < smoothright;
 
                     // Determine a 'stop'
-                   // use avg?
-                   //     do it both ways
                     int stopx = xpos;
-                    for (int sx = xpos + smoothness; sx < xpos + mergeSize; sx++)
+                    for (int sx = dirIsRight ? xpos + 2*smoothness : xpos - 2*smoothness; dirIsRight ? sx < xpos + mergeSize : sx > xpos - mergeSize; sx += dirIsRight ? 1 : -1)
                     {
                         if (smoothnessMap[y * bmp.Width + sx] > stopThreshold)
                         {
@@ -194,7 +192,7 @@ namespace mozaic
                     int nbPixels = Math.Abs(stopx - xpos);
 
                     // Make border
-                    for (int x = xpos; x != stopx; x += (dirIsRight ? 1 : -1))
+                    for (int x = dirIsRight ? xpos : xpos + 1; x != stopx; x += (dirIsRight ? 1 : -1))
                     {
                         // Get x,y color
                         int idx = (y * stride) + x * bppModifier;

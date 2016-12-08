@@ -122,20 +122,31 @@ namespace mozaic
         }
 
         // MAKE IT
-        private void buttonBuildMozaic_Click_1(object sender, EventArgs e)
+        private async void buttonBuildMozaic_Click_1(object sender, EventArgs e)
         {
+            var progressHandler = new Progress<int>(value =>
+            {
+                progressBarMakeMozaic.Value = value;
+            });
+            var progress = progressHandler as IProgress<int>;
+
             mozaic.setWeights(Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
             mozaic.useFastIndex = Properties.Settings.Default.fastSearch;
             mozaic.brightnessCorrectionFactor = Properties.Settings.Default.brightnessCorrectionFactor;
             mozaic.penaltyReuseFactor = Properties.Settings.Default.penaltyReuse;
             mozaic.setTileDirectoriesToUse(checkedListBoxTileCollections.CheckedItems.OfType<string>().ToList());
 
-            string resultPath = mozaic.make();
+            string resultPath;
+            await Task.Run(() =>
+            {
+                resultPath = mozaic.make(progress);
+                FileStream bitmapFile = new FileStream(resultPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                Image loaded = new Bitmap(bitmapFile);
 
-            FileStream bitmapFile = new FileStream(resultPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            Image loaded = new Bitmap(bitmapFile);
+                pictureBoxResult.Image = loaded;
+            });
+            progressBarMakeMozaic.Value = 0;
 
-            pictureBoxResult.Image = loaded;
         }
 
         private void numericUpDownNbColRow_ValueChanged(object sender, EventArgs e)
