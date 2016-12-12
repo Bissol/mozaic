@@ -34,11 +34,21 @@ namespace mozaic
             }
         }
 
-        public void Process()
+        public void Process(IProgress<int> progress)
         {
             //for (int i = 0; i < this.images.Length; i++)
-            Parallel.ForEach(this.images, imagePath =>
+            float count = 0;
+            var lockTarget = new object();
+            float total = this.images.Length;
+            Parallel.ForEach(this.images, new ParallelOptions { MaxDegreeOfParallelism = 4 }, imagePath =>
             {
+                lock (lockTarget)
+                {
+                    count++;
+                }
+                
+                int percent = (int)((count / total) * 100f);
+                progress.Report(percent);
                 string dir = Path.GetDirectoryName(imagePath);// this.images[i]);
                 dir = dir.Replace(this._pathToImages, this.tilesDir);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);

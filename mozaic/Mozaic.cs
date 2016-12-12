@@ -65,7 +65,7 @@ namespace mozaic
             this.weightRGBError = wRgbErr;
         }
 
-        public void prepareData()
+        public void prepareData(IProgress<int> progress)
         {
             // Load tiles paths
             if (Directory.Exists(data.tilesPath))
@@ -73,11 +73,18 @@ namespace mozaic
                 data.tiles.AddRange(Directory.GetFiles(data.tilesPath, "*.png", SearchOption.AllDirectories));
             }
 
+            float total = data.tiles.Count;
+            float count = 0;
+
             // Compute tiles stats
-            foreach(string tpath in data.tiles)
+            foreach (string tpath in data.tiles)
             {
                 using (Bitmap bm = new Bitmap(tpath))
                 {
+                    count++;
+                    int percent = (int)((count / total) * 100f);
+                    progress.Report(percent);
+
                     List<int> c = ImageProcessing.CalculateAverageColor(bm, data.matchSize);
                     data.colorData[tpath] = c;
 
@@ -197,7 +204,6 @@ namespace mozaic
                 for (int j=0; j< numRow; j++)
                 {
                     count++;
-                    Random rnd = new Random();
                     int percent = (int)((count / total) * 100f);
                     progress.Report(percent);
                     Rectangle rec = new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize);

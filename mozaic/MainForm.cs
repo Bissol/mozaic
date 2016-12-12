@@ -87,24 +87,45 @@ namespace mozaic
             }
         }
 
-        private void buttonMakeTiles_Click(object sender, EventArgs e)
+        private async void buttonMakeTiles_Click(object sender, EventArgs e)
         {
-            this.thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath, Path.Combine(Properties.Settings.Default.appData, "tiles"));
-            this.thumbMaker.Process();
+            var progressHandler = new Progress<int>(value =>
+            {
+                progressBarMakeMozaic.Value = value;
+            });
+            var progress = progressHandler as IProgress<int>;
+
+            await Task.Run(() =>
+            {
+                this.thumbMaker = new ThumbMaker(Properties.Settings.Default.LastPath, Path.Combine(Properties.Settings.Default.appData, "tiles"));
+                this.thumbMaker.Process(progress);
+            });
+
+            progressBarMakeMozaic.Value = 0;
         }
 
         
-        private void buttonPrepareMozaic_Click(object sender, EventArgs e)
+        private async void buttonPrepareMozaic_Click(object sender, EventArgs e)
         {
             mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
-            mozaic.prepareData();
+            var progressHandler = new Progress<int>(value =>
+            {
+                progressBarMakeMozaic.Value = value;
+            });
+            var progress = progressHandler as IProgress<int>;
+
+            await Task.Run(() =>
+            {
+                mozaic.prepareData(progress);
+            });
 
             List<string> tileDirs = mozaic.getTileDirectories();
             foreach(string dir in tileDirs)
             {
                 checkedListBoxTileCollections.Items.Add(dir);
             }
-            
+
+            progressBarMakeMozaic.Value = 0;
         }
 
         // Load data from bin file
