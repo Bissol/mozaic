@@ -169,30 +169,36 @@ namespace mozaic
                 float[] smoothnessMap = new float[length];
                 ImageProcessing.computeSmoothnessMap(ref smoothnessMap, averageMap, stride, bppModifier, bmp.Width, bmp.Height, copy, smoothness);
 
+                // Stops
+                int[] stops = new int[bmp.Height];
+                getStops(ref stops, smoothnessMap, averageMap, xpos, bmp.Width, bmp.Height, smoothness, mergeSize, stopThreshold);
+
                 for (int y = 0; y < bmp.Height; y++)
                 {
-                    // Decide on a direction (left or right)
-                    bool dirIsRight = false;
-                    float smoothleft = smoothnessMap[y * bmp.Width + (xpos - smoothness)];
-                    float smoothright = smoothnessMap[y * bmp.Width + (xpos + smoothness)];
-                    dirIsRight = smoothleft < smoothright;
+                    //// Decide on a direction (left or right)
+                    //bool dirIsRight = false;
+                    //float smoothleft = smoothnessMap[y * bmp.Width + (xpos - smoothness)];
+                    //float smoothright = smoothnessMap[y * bmp.Width + (xpos + smoothness)];
+                    //dirIsRight = smoothleft < smoothright;
 
-                    // Determine a 'stop'
-                    int stopx = xpos;
-                    for (int sx = dirIsRight ? xpos + 2*smoothness : xpos - 2*smoothness; dirIsRight ? sx < xpos + mergeSize : sx > xpos - mergeSize; sx += dirIsRight ? 1 : -1)
-                    {
-                        if (smoothnessMap[y * bmp.Width + sx] > stopThreshold)
-                        {
-                            stopx = sx;
-                            break;
-                        }
-                    }
+                    //// Determine a 'stop'
+                    //int stopx = xpos;
+                    //for (int sx = dirIsRight ? xpos + 2*smoothness : xpos - 2*smoothness; dirIsRight ? sx < xpos + mergeSize : sx > xpos - mergeSize; sx += dirIsRight ? 1 : -1)
+                    //{
+                    //    if (smoothnessMap[y * bmp.Width + sx] > stopThreshold)
+                    //    {
+                    //        stopx = sx;
+                    //        break;
+                    //    }
+                    //}
+                    int stopx = stops[y];
+                    bool dirIsRight = stopx <= xpos ? false : true;
 
                     // How many smoothing pixels?
                     int nbPixels = Math.Abs(stopx - xpos);
 
                     // Make border
-                    for (int x = dirIsRight ? xpos : xpos + 1; x != stopx; x += (dirIsRight ? 1 : -1))
+                    for (int x = dirIsRight ? xpos : xpos-1; dirIsRight? x<stopx :  x > stopx; x += (dirIsRight ? 1 : -1))
                     {
                         // Get x,y color
                         int idx = (y * stride) + x * bppModifier;
@@ -201,20 +207,22 @@ namespace mozaic
                         blue = ptr[idx];
 
                         // Get merge color (symetry)
-                        int symidx = (y * stride) + (x > xpos ? (xpos - (x - xpos)) : xpos + (xpos - x)) * bppModifier;
+                        int symx = dirIsRight ? (xpos - (x - xpos) + 1) : (xpos + (xpos - x));
+                        int symidx = (y * stride) + symx * bppModifier;
                         red2 = ptr[symidx + 2];
                         green2 = ptr[symidx + 1];
                         blue2 = ptr[symidx];
 
                         // Get merge factor f(x)
+                        // todo: si stops du haut s'arrête avant, fusion inclut pixel du haut (pareil pour bas)
                         float localPixWeight = (float)Math.Abs((float)x - (float)xpos) / (float)nbPixels;
                         //if (x > xpos) localPixWeight = 1;// 1.0f / localPixWeight;
                         float symPixWeight = 1.0F - localPixWeight;
 
                         // Merge
-                        red = (int)(localPixWeight * (float)red + symPixWeight * (float)red2);
-                        green = (int)(localPixWeight * (float)green + symPixWeight * (float)green2);
-                        blue = (int)(localPixWeight * (float)blue + symPixWeight * (float)blue2);
+                        red = 100;// (int)(localPixWeight * (float)red + symPixWeight * (float)red2);
+                        green = 100;// (int)(localPixWeight * (float)green + symPixWeight * (float)green2);
+                        blue = 100;// (int)(localPixWeight * (float)blue + symPixWeight * (float)blue2);
 
                         // Write result
                         ptr[(x * bppModifier) + y * stride] = (byte)blue;
@@ -222,6 +230,48 @@ namespace mozaic
                         ptr[(x * bppModifier) + y * stride + 2] = (byte)red;
                     }
                 }
+            }
+        }
+
+        private static void getStops(ref int[] stops, float[] smoothMap, float[] avgMap, int xpos, int width, int height, int smoothSize, int mergeSize, float stopThreshold)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                // Decide on a direction (left or right)
+                bool dirIsRight = false;
+                float smoothleft = smoothMap[y * width + (xpos - smoothSize)];
+                float smoothright = smoothMap[y * width + (xpos + smoothSize)];
+                dirIsRight = smoothleft < smoothright;
+
+                // Determine a 'stop'
+                int stopx = dirIsRight ? (xpos + mergeSize / 4) : (xpos - mergeSize / 4);
+                for (int sx = xpos; dirIsRight ? (sx < xpos + mergeSize) : (sx > xpos - mergeSize); sx += dirIsRight ? 1 : -1)
+                {
+                    if (smoothMap[y * width + sx] > stopThreshold 
+                        && (dirIsRight ? (sx > xpos + mergeSize/4) : (sx < xpos - mergeSize/4)))
+                    {
+                        stopx = sx;
+                        break;
+                    }
+                }
+                stops[y] = stopx;
+
+                // Stop based on changing average
+                /*int stopx = dirIsRight ? (xpos + mergeSize / 4) : (xpos - mergeSize / 4);
+                float prevAvg = avgMap[y * width + stopx];
+
+                for (int sx = xpos; dirIsRight ? (sx < xpos + mergeSize) : (sx > xpos - mergeSize); sx += dirIsRight ? 1 : -1)
+                {
+                    float delta = Math.Abs(avgMap[y * width + sx] - prevAvg);
+                    if (delta > stopThreshold 
+                        && (dirIsRight ? (sx > xpos + mergeSize / 4) : (sx < xpos - mergeSize / 4)))
+                    {
+                        stopx = sx;
+                        break;
+                    }
+                    prevAvg = avgMap[y * width + sx];
+                }
+                stops[y] = stopx;*/
             }
         }
 
@@ -339,7 +389,7 @@ namespace mozaic
             return smoothness / count;
         }
 
-        public static void test(ref Bitmap bmp, int avgMapSize, int smoothness, bool showSmoothness)
+        public static void test(ref Bitmap bmp, int avgMapSize, int smoothness, bool showSmoothness, float thresh)
         {
             BitmapData data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadWrite, bmp.PixelFormat);
             int stride = data.Stride;
@@ -367,7 +417,10 @@ namespace mozaic
                 {
                     for (int x = 0; x < bmp.Width; x++)
                     {
-                        int val = showSmoothness ? (int)smoothnessMap[y * bmp.Width + x] :(int)averageMap[y * bmp.Width + x];
+                        bool above = smoothnessMap[y * bmp.Width + x] > thresh;
+                        int val = showSmoothness ? 
+                            (above ? 200 : 0) :
+                            (int)averageMap[y * bmp.Width + x];
 
                         // Write result
                         ptr[(x * bppModifier) + y * stride] = (byte)val;

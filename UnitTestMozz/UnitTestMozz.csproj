@@ -66,7 +66,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="test2.png" />
     <None Include="Resources\testImg.bmp" />
+    <Content Include="Resources\test2.png" />
     <Content Include="test.png" />
   </ItemGroup>
   <ItemGroup>
