@@ -20,7 +20,7 @@ namespace UnitTestMozz
         public void TestSmartEdge()
         {
             Bitmap bmp = UnitTestMozz.Properties.Resources.test2;
-            ImageProcessing.SmartMergeVertical(ref bmp, 300, 30, 5, 2, 10);
+            ImageProcessing.SmartMergeVertical(ref bmp, 300, 30, 2, 2, 10);
             bmp.Save("testSmart.png");
         }
 
@@ -36,7 +36,7 @@ namespace UnitTestMozz
         public void TestAvgSmoothness()
         {
             Bitmap bmp = UnitTestMozz.Properties.Resources.test2;
-            ImageProcessing.test(ref bmp, 5, 5, true, 15);
+            ImageProcessing.test(ref bmp, 2, 2, true, 8);
             bmp.Save("testsmooth.png");
         }
     }

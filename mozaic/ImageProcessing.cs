@@ -215,14 +215,14 @@ namespace mozaic
 
                         // Get merge factor f(x)
                         // todo: si stops du haut s'arrête avant, fusion inclut pixel du haut (pareil pour bas)
-                        float localPixWeight = (float)Math.Abs((float)x - (float)xpos) / (float)nbPixels;
+                        float localPixWeight = 0;// (float)Math.Abs((float)x - (float)xpos) / (float)nbPixels;
                         //if (x > xpos) localPixWeight = 1;// 1.0f / localPixWeight;
                         float symPixWeight = 1.0F - localPixWeight;
 
                         // Merge
-                        red = 100;// (int)(localPixWeight * (float)red + symPixWeight * (float)red2);
-                        green = 100;// (int)(localPixWeight * (float)green + symPixWeight * (float)green2);
-                        blue = 100;// (int)(localPixWeight * (float)blue + symPixWeight * (float)blue2);
+                        red = (int)(localPixWeight * (float)red + symPixWeight * (float)red2);
+                        green = (int)(localPixWeight * (float)green + symPixWeight * (float)green2);
+                        blue = (int)(localPixWeight * (float)blue + symPixWeight * (float)blue2);
 
                         // Write result
                         ptr[(x * bppModifier) + y * stride] = (byte)blue;
@@ -241,13 +241,15 @@ namespace mozaic
                 bool dirIsRight = false;
                 float smoothleft = smoothMap[y * width + (xpos - smoothSize)];
                 float smoothright = smoothMap[y * width + (xpos + smoothSize)];
-                dirIsRight = smoothleft < smoothright;
+                dirIsRight = (smoothleft < smoothright);
 
                 // Determine a 'stop'
                 int stopx = dirIsRight ? (xpos + mergeSize / 4) : (xpos - mergeSize / 4);
                 for (int sx = xpos; dirIsRight ? (sx < xpos + mergeSize) : (sx > xpos - mergeSize); sx += dirIsRight ? 1 : -1)
                 {
-                    if (smoothMap[y * width + sx] > stopThreshold 
+                    float howFarFactor = (float)Math.Abs(xpos - sx) / (float)mergeSize;
+                    float continueBonus = howFarFactor * (stopThreshold * 0.5f);
+                    if (smoothMap[y * width + sx] > (stopThreshold + continueBonus)
                         && (dirIsRight ? (sx > xpos + mergeSize/4) : (sx < xpos - mergeSize/4)))
                     {
                         stopx = sx;
