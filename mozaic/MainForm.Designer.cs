@@ -61,6 +61,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
             this.progressBarMakeMozaic = new System.Windows.Forms.ProgressBar();
+            this.checkBoxMultiscale = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).BeginInit();
             this.Paramètres.SuspendLayout();
@@ -189,6 +190,7 @@
             // 
             // Paramètres
             // 
+            this.Paramètres.Controls.Add(this.checkBoxMultiscale);
             this.Paramètres.Controls.Add(this.label11);
             this.Paramètres.Controls.Add(this.checkedListBoxTileCollections);
             this.Paramètres.Controls.Add(this.label10);
@@ -402,6 +404,16 @@
             this.progressBarMakeMozaic.Step = 1;
             this.progressBarMakeMozaic.TabIndex = 14;
             // 
+            // checkBoxMultiscale
+            // 
+            this.checkBoxMultiscale.AutoSize = true;
+            this.checkBoxMultiscale.Location = new System.Drawing.Point(721, 11);
+            this.checkBoxMultiscale.Name = "checkBoxMultiscale";
+            this.checkBoxMultiscale.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxMultiscale.TabIndex = 20;
+            this.checkBoxMultiscale.Text = "multi-échelle";
+            this.checkBoxMultiscale.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -475,6 +487,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckedListBox checkedListBoxTileCollections;
         private System.Windows.Forms.ProgressBar progressBarMakeMozaic;
+        private System.Windows.Forms.CheckBox checkBoxMultiscale;
     }
 }
 

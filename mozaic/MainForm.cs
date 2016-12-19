@@ -160,7 +160,15 @@ namespace mozaic
             string resultPath;
             await Task.Run(() =>
             {
-                resultPath = mozaic.make(progress);
+                if (checkBoxMultiscale.Checked)
+                {
+                    resultPath = mozaic.make_multiscale(progress);
+                }
+                else
+                {
+                    resultPath = mozaic.make(progress);
+                }
+                
                 FileStream bitmapFile = new FileStream(resultPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 Image loaded = new Bitmap(bitmapFile);
 

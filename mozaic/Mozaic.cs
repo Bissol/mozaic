@@ -35,6 +35,12 @@ namespace mozaic
         public int matchSize = 4; // Tiles will be divided i*i for comparison
     }
 
+    class rectangleToFill
+    {
+        public Rectangle rectangle;
+        public short depth = 0;
+    }
+
     class Mozaic
     {
         CollectionData data = new CollectionData();
@@ -85,7 +91,7 @@ namespace mozaic
                     int percent = (int)((count / total) * 100f);
                     progress.Report(percent);
 
-                    List<int> c = ImageProcessing.CalculateAverageColor(bm, data.matchSize);
+                    List<int> c = ImageProcessing.CalculateAverageColor(bm, data.matchSize, bm.Width, bm.Height);
                     data.colorData[tpath] = c;
 
                     // Index for faster retrieval
@@ -209,9 +215,10 @@ namespace mozaic
                     Rectangle rec = new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize);
                     grafics.DrawImage(target, 0, 0, rec, GraphicsUnit.Pixel);
                     {
-                        tmpColorList = ImageProcessing.CalculateAverageColor(tmptile, data.matchSize);
+                        tmpColorList = ImageProcessing.CalculateAverageColor(tmptile, data.matchSize, tmptile.Width, tmptile.Height);
                         Color c = Color.FromArgb(tmpColorList[0]);
-                        string matchPath = this.findBestMatch(tmpColorList, fastSearch);
+                        float minErr = 0;
+                        string matchPath = this.findBestMatch(tmpColorList, fastSearch, ref minErr);
                         if (tilesUsage.ContainsKey(matchPath)) tilesUsage[matchPath] += 1; else tilesUsage[matchPath] = 1;
 
                         // Copy match img to relevant location in output img
@@ -238,7 +245,149 @@ namespace mozaic
             return resultImagePath;
         }
 
-        private string findBestMatch(List<int> colorData, bool fastSearch)
+        public string make_multiscale(IProgress<int> progress)
+        {
+            // Target
+            Bitmap target = new Bitmap(Properties.Settings.Default.ImgTargetPath);
+
+            // Moz parameters
+            bool fastSearch = this.useFastIndex;
+            int maxNumColRow = (int)((float)Properties.Settings.Default.nbColRows / (float)8);
+            int maxDepth = 2;
+            int destinationSquareSize = Properties.Settings.Default.tileSizeResult;
+            int sourceSquareSize = (int)((float)Math.Max(target.Width, target.Height) / (float)maxNumColRow) + 1;
+            float expansionFactor = (float)destinationSquareSize / (float)sourceSquareSize;
+            float errorThreshold = 0.5f;
+
+            // Iteration params
+            int numCol = target.Width / sourceSquareSize;
+            int numRow = target.Height / sourceSquareSize;
+
+            // Result image
+            Bitmap outputImg = new Bitmap(numCol * destinationSquareSize, numRow * destinationSquareSize);
+            Graphics outputGraphic = Graphics.FromImage(outputImg);
+
+            // Tile reusable objects
+            Bitmap tmptile = new Bitmap(sourceSquareSize, sourceSquareSize);
+            Graphics grafics = Graphics.FromImage(tmptile);
+
+            // Tracking tiles usage
+            tilesUsage = new Dictionary<string, int>();
+
+            // Get initial rectangles to fill
+            List<rectangleToFill> rectanglesToFill = new List<rectangleToFill>();
+            for (int i = 0; i < numCol; i++)
+            {
+                for (int j = 0; j < numRow; j++)
+                {
+                    Rectangle rec = new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize);
+                    rectangleToFill rtf = new rectangleToFill();
+                    rtf.rectangle = rec;
+                    rtf.depth = 0;
+                    rectanglesToFill.Add(rtf);
+                }
+            }
+
+            // Fill the (expanding) list
+            List<int> tmpColorList;
+            for (int ei = 0; ei < rectanglesToFill.Count; ei++)
+            {
+                Rectangle srcRect = rectanglesToFill[ei].rectangle;
+                grafics.DrawImage(target, 0, 0, srcRect, GraphicsUnit.Pixel);
+                {
+                    tmpColorList = ImageProcessing.CalculateAverageColor(tmptile, data.matchSize, srcRect.Width, srcRect.Height);
+                    Color c = Color.FromArgb(tmpColorList[0]);
+                    float tileError = 0;
+                    string matchPath = this.findBestMatch(tmpColorList, fastSearch, ref tileError);
+
+                    if (tileError < errorThreshold || rectanglesToFill[ei].depth > maxDepth)
+                    {
+                        // OK, proceed with this tile
+                        if (tilesUsage.ContainsKey(matchPath)) tilesUsage[matchPath] += 1; else tilesUsage[matchPath] = 1;
+                        // Copy match img to relevant location in output img
+                        using (Bitmap tile = new Bitmap(matchPath))
+                        {
+                            // Adjust image for better match? (little cheating)
+                            Color matchColor = Color.FromArgb(data.colorData[matchPath][0]);
+                            float brightnessDiff = (this.brightnessCorrectionFactor / 10f) * (c.GetBrightness() - matchColor.GetBrightness());
+                            ImageAttributes imageAttributes = new ImageAttributes();
+                            ImageProcessing.SetAdjustmentParams(ref imageAttributes, 1.0f + brightnessDiff, 1.0f, 1.0f);
+
+                            Rectangle destRect = new Rectangle((int)((float)srcRect.Left * expansionFactor), (int)((float)srcRect.Top * expansionFactor), (int)((float)srcRect.Width * expansionFactor), (int)((float)srcRect.Height * expansionFactor));
+                            outputGraphic.DrawImage(tile, destRect, 0, 0, tile.Width, tile.Height, GraphicsUnit.Pixel, imageAttributes);
+                        }
+                    }
+                    else
+                    {
+                        // Nope, split it into smaller tiles
+                        int newWidth = (int)Math.Ceiling((float)srcRect.Width / 2);
+                        int newHeight = (int)Math.Ceiling((float)srcRect.Height / 2);
+                        rectangleToFill r11 = new rectangleToFill();
+                        r11.depth = (short)(rectanglesToFill[ei].depth + 1);
+                        r11.rectangle = new Rectangle(srcRect.Left, srcRect.Top, newWidth, newHeight);
+                        rectanglesToFill.Add(r11);
+
+                        rectangleToFill r12 = new rectangleToFill();
+                        r12.depth = (short)(rectanglesToFill[ei].depth + 1);
+                        r12.rectangle = new Rectangle(srcRect.Left + newWidth, srcRect.Top, newWidth, newHeight);
+                        rectanglesToFill.Add(r12);
+
+                        rectangleToFill r21 = new rectangleToFill();
+                        r21.depth = (short)(rectanglesToFill[ei].depth + 1);
+                        r21.rectangle = new Rectangle(srcRect.Left, srcRect.Top + newHeight, newWidth, newHeight);
+                        rectanglesToFill.Add(r21);
+
+                        rectangleToFill r22 = new rectangleToFill();
+                        r22.depth = (short)(rectanglesToFill[ei].depth + 1);
+                        r22.rectangle = new Rectangle(srcRect.Left + newWidth, srcRect.Top + newHeight, newWidth, newHeight);
+                        rectanglesToFill.Add(r22);
+                    }
+                }
+            }
+
+                    /*List<int> tmpColorList;
+                    float total = numCol * numRow;
+                    float count = 0;
+                    for (int i = 0; i < numCol; i++)
+                    {
+                        for (int j = 0; j < numRow; j++)
+                        {
+                            count++;
+                            int percent = (int)((count / total) * 100f);
+                            progress.Report(percent);
+                            Rectangle rec = new Rectangle(i * sourceSquareSize, j * sourceSquareSize, sourceSquareSize, sourceSquareSize);
+                            grafics.DrawImage(target, 0, 0, rec, GraphicsUnit.Pixel);
+                            {
+                                tmpColorList = ImageProcessing.CalculateAverageColor(tmptile, data.matchSize);
+                                Color c = Color.FromArgb(tmpColorList[0]);
+                                string matchPath = this.findBestMatch(tmpColorList, fastSearch);
+                                if (tilesUsage.ContainsKey(matchPath)) tilesUsage[matchPath] += 1; else tilesUsage[matchPath] = 1;
+
+                                // Copy match img to relevant location in output img
+                                using (Bitmap tile = new Bitmap(matchPath))
+                                {
+                                    // Adjust image for better match? (little cheating)
+                                    Color matchColor = Color.FromArgb(data.colorData[matchPath][0]);
+                                    float brightnessDiff = (this.brightnessCorrectionFactor / 10f) * (c.GetBrightness() - matchColor.GetBrightness());
+                                    ImageAttributes imageAttributes = new ImageAttributes();
+                                    ImageProcessing.SetAdjustmentParams(ref imageAttributes, 1.0f + brightnessDiff, 1.0f, 1.0f);
+
+                                    Rectangle destRect = new Rectangle(i * destinationSquareSize, j * destinationSquareSize, destinationSquareSize, destinationSquareSize);
+                                    outputGraphic.DrawImage(tile, destRect, 0, 0, tile.Width, tile.Height, GraphicsUnit.Pixel, imageAttributes);
+                                }
+                            }
+                        }
+                    }*/
+
+                    string resultImagePath = data.appPath + '/' + "result.png";
+            outputImg.Save(resultImagePath, ImageFormat.Png);
+            outputGraphic.Dispose();
+            outputImg.Dispose();
+
+            return resultImagePath;
+        }
+
+        private string findBestMatch(List<int> colorData, bool fastSearch, ref float minErr)
         {
             string bestMatchPath = "";
             float minError = 0;
@@ -292,6 +441,7 @@ namespace mozaic
                 {
                     minError = globalError;
                     bestMatchPath = path;
+                    minErr = globalError;
                 }
             }
 

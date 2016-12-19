@@ -11,7 +11,7 @@ namespace mozaic
 {
     public class ImageProcessing
     {
-        public static List<int> CalculateAverageColor(Bitmap bm, int nbColRow)
+        public static List<int> CalculateAverageColor(Bitmap bm, int nbColRow, int realWidth, int realHeight)
         {
             List<int> result = new List<int>();
             int[] reds = new int[nbColRow * nbColRow];
@@ -19,8 +19,8 @@ namespace mozaic
             int[] blues = new int[nbColRow * nbColRow];
 
             int nbColOrRow = nbColRow;
-            int width = bm.Width;
-            int height = bm.Height;
+            int width = realWidth;
+            int height = realHeight;
             double tileSize = (double)width / (double)nbColRow;
             int red = 0;
             int green = 0;
@@ -30,7 +30,7 @@ namespace mozaic
             long[] totals = new long[] { 0, 0, 0 };
             int bppModifier = bm.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb ? 3 : 4; // cutting corners, will fail on anything else but 32 and 24 bit images
 
-            BitmapData srcData = bm.LockBits(new System.Drawing.Rectangle(0, 0, bm.Width, bm.Height), ImageLockMode.ReadOnly, bm.PixelFormat);
+            BitmapData srcData = bm.LockBits(new System.Drawing.Rectangle(0, 0, realWidth, realHeight), ImageLockMode.ReadOnly, bm.PixelFormat);
             int stride = srcData.Stride;
             IntPtr Scan0 = srcData.Scan0;
 
