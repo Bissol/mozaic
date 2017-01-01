@@ -41,6 +41,7 @@
             this.pictureBoxTargetImage = new System.Windows.Forms.PictureBox();
             this.pictureBoxResult = new System.Windows.Forms.PictureBox();
             this.Paramètres = new System.Windows.Forms.GroupBox();
+            this.checkBoxMultiscale = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.checkedListBoxTileCollections = new System.Windows.Forms.CheckedListBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -61,7 +62,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDownNbColRow = new System.Windows.Forms.NumericUpDown();
             this.progressBarMakeMozaic = new System.Windows.Forms.ProgressBar();
-            this.checkBoxMultiscale = new System.Windows.Forms.CheckBox();
+            this.comboBoxWebex = new System.Windows.Forms.ComboBox();
+            this.buttonExport2Web = new System.Windows.Forms.Button();
+            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.buttonGenBinaryFileAndSend = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTargetImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResult)).BeginInit();
             this.Paramètres.SuspendLayout();
@@ -216,6 +220,16 @@
             this.Paramètres.TabIndex = 13;
             this.Paramètres.TabStop = false;
             this.Paramètres.Text = "Paramètres";
+            // 
+            // checkBoxMultiscale
+            // 
+            this.checkBoxMultiscale.AutoSize = true;
+            this.checkBoxMultiscale.Location = new System.Drawing.Point(721, 11);
+            this.checkBoxMultiscale.Name = "checkBoxMultiscale";
+            this.checkBoxMultiscale.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxMultiscale.TabIndex = 20;
+            this.checkBoxMultiscale.Text = "multi-échelle";
+            this.checkBoxMultiscale.UseVisualStyleBackColor = true;
             // 
             // label11
             // 
@@ -398,27 +412,58 @@
             // 
             // progressBarMakeMozaic
             // 
-            this.progressBarMakeMozaic.Location = new System.Drawing.Point(6, 561);
+            this.progressBarMakeMozaic.Location = new System.Drawing.Point(3, 771);
             this.progressBarMakeMozaic.Name = "progressBarMakeMozaic";
             this.progressBarMakeMozaic.Size = new System.Drawing.Size(861, 17);
             this.progressBarMakeMozaic.Step = 1;
             this.progressBarMakeMozaic.TabIndex = 14;
             // 
-            // checkBoxMultiscale
+            // comboBoxWebex
             // 
-            this.checkBoxMultiscale.AutoSize = true;
-            this.checkBoxMultiscale.Location = new System.Drawing.Point(721, 11);
-            this.checkBoxMultiscale.Name = "checkBoxMultiscale";
-            this.checkBoxMultiscale.Size = new System.Drawing.Size(84, 17);
-            this.checkBoxMultiscale.TabIndex = 20;
-            this.checkBoxMultiscale.Text = "multi-échelle";
-            this.checkBoxMultiscale.UseVisualStyleBackColor = true;
+            this.comboBoxWebex.FormattingEnabled = true;
+            this.comboBoxWebex.Location = new System.Drawing.Point(6, 559);
+            this.comboBoxWebex.Name = "comboBoxWebex";
+            this.comboBoxWebex.Size = new System.Drawing.Size(165, 21);
+            this.comboBoxWebex.TabIndex = 15;
+            // 
+            // buttonExport2Web
+            // 
+            this.buttonExport2Web.Location = new System.Drawing.Point(177, 559);
+            this.buttonExport2Web.Name = "buttonExport2Web";
+            this.buttonExport2Web.Size = new System.Drawing.Size(110, 23);
+            this.buttonExport2Web.TabIndex = 16;
+            this.buttonExport2Web.Text = "export site web";
+            this.buttonExport2Web.UseVisualStyleBackColor = true;
+            this.buttonExport2Web.Click += new System.EventHandler(this.buttonExport2Web_Click);
+            // 
+            // textBoxLog
+            // 
+            this.textBoxLog.Location = new System.Drawing.Point(463, 624);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxLog.Size = new System.Drawing.Size(392, 141);
+            this.textBoxLog.TabIndex = 17;
+            // 
+            // buttonGenBinaryFileAndSend
+            // 
+            this.buttonGenBinaryFileAndSend.Location = new System.Drawing.Point(293, 559);
+            this.buttonGenBinaryFileAndSend.Name = "buttonGenBinaryFileAndSend";
+            this.buttonGenBinaryFileAndSend.Size = new System.Drawing.Size(110, 23);
+            this.buttonGenBinaryFileAndSend.TabIndex = 18;
+            this.buttonGenBinaryFileAndSend.Text = "générer bin + envoi";
+            this.buttonGenBinaryFileAndSend.UseVisualStyleBackColor = true;
+            this.buttonGenBinaryFileAndSend.Click += new System.EventHandler(this.buttonGenBinaryFileAndSend_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(867, 576);
+            this.ClientSize = new System.Drawing.Size(867, 788);
+            this.Controls.Add(this.buttonGenBinaryFileAndSend);
+            this.Controls.Add(this.textBoxLog);
+            this.Controls.Add(this.buttonExport2Web);
+            this.Controls.Add(this.comboBoxWebex);
             this.Controls.Add(this.progressBarMakeMozaic);
             this.Controls.Add(this.Paramètres);
             this.Controls.Add(this.pictureBoxResult);
@@ -488,6 +533,10 @@
         private System.Windows.Forms.CheckedListBox checkedListBoxTileCollections;
         private System.Windows.Forms.ProgressBar progressBarMakeMozaic;
         private System.Windows.Forms.CheckBox checkBoxMultiscale;
+        private System.Windows.Forms.ComboBox comboBoxWebex;
+        private System.Windows.Forms.Button buttonExport2Web;
+        private System.Windows.Forms.TextBox textBoxLog;
+        private System.Windows.Forms.Button buttonGenBinaryFileAndSend;
     }
 }
 

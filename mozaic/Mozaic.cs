@@ -76,7 +76,7 @@ namespace mozaic
             // Load tiles paths
             if (Directory.Exists(data.tilesPath))
             {
-                data.tiles.AddRange(Directory.GetFiles(data.tilesPath, "*.png", SearchOption.AllDirectories));
+                data.tiles.AddRange(Directory.GetFiles(data.tilesPath, "*.jpg", SearchOption.AllDirectories));
             }
 
             float total = data.tiles.Count;
@@ -108,6 +108,45 @@ namespace mozaic
 
             // Save
             saveData();
+        }
+
+        public string generateBinaryColorInfo(string dir)
+        {
+            int version = 1;
+            List<Byte> bytes = new List<byte>();
+            List<string> files = data.directories[dir];
+
+            // Header
+            bytes.Add((Byte)version);
+            byte[] intBytes = BitConverter.GetBytes(files.Count);
+            bytes.AddRange(intBytes);
+            
+            foreach(string path in files)
+            {
+                List<int> info = data.colorData[path];
+
+                // name
+                byte[] byteName = Encoding.ASCII.GetBytes(Path.GetFileName(path));
+                bytes.Add((Byte)byteName.Length);
+                bytes.AddRange(byteName);
+
+                // color regions
+                int numRegions = data.matchSize;
+                bytes.Add((Byte)(numRegions*numRegions));
+                for(int i = 1; i < info.Count; i++)
+                {
+                    Color c = Color.FromArgb(info[i]);
+                    bytes.Add(c.R);
+                    bytes.Add(c.G);
+                    bytes.Add(c.B);
+                }
+            }
+
+            // Save it
+            string binPath = Path.Combine(Path.GetDirectoryName(files[0]), "data.bin");
+            File.WriteAllBytes(binPath, bytes.ToArray());
+
+            return binPath;
         }
 
         private void buildIndex()
@@ -172,6 +211,11 @@ namespace mozaic
         public List<string> getTileDirectories()
         {
             return data.directories.Keys.ToList();
+        }
+
+        public Dictionary<string, List<string>> getTilePaths()
+        {
+            return data.directories;
         }
 
         public void setTileDirectoriesToUse(List<string> dirs)

@@ -53,40 +53,64 @@ namespace mozaic
                 dir = dir.Replace(this._pathToImages, this.tilesDir);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                 string fname = Path.Combine(dir, Path.GetFileNameWithoutExtension(imagePath));//this.images[i]));
-                if (File.Exists(fname + "_tile" + ".png")) return;// continue;
+                if (File.Exists(fname + "_tile" + ".jpg")) return;// continue;
+
+                Bitmap tmpbmp = new Bitmap(this.thumbSize, this.thumbSize);
 
                 using (Image im = Image.FromFile(imagePath))//this.images[i]))
                 {
-                    using (Bitmap res = ThumbMaker.ResizeImage(im, this.thumbSize))
-                    {
-                        string p = fname + "_tile" + ".png";
-                        res.Save(p, ImageFormat.Png);
+                    // First resize
+                    Bitmap imS = new Bitmap(3 * this.thumbSize, 3*this.thumbSize);
+                    ThumbMaker.ResizeImage(ref imS, im, 3 * this.thumbSize);
+                    Bitmap tmpfull = new Bitmap(imS.Width, imS.Height);
 
-                        // 45 degrees
-                        Image plus45 = ThumbMaker.RotateImage(res, 45, 1.4f);
-                        plus45.Save(fname + "_45" + ".png", ImageFormat.Png);
-                        plus45.Dispose();
+                    //using (Bitmap res = ThumbMaker.ResizeImage(ref tmpbmp, im, this.thumbSize))
+                    ThumbMaker.ResizeImage(ref tmpbmp, imS, this.thumbSize);
+                    string p = fname + "_tile" + ".jpg";
+                    tmpbmp.Save(p, ImageFormat.Jpeg);
 
-                        Image minus45 = ThumbMaker.RotateImage(res, -45, 1.4f);
-                        minus45.Save(fname + "_-45" + ".png", ImageFormat.Png);
-                        minus45.Dispose();
+                    // 45 degrees
+                    ThumbMaker.RotateImage(ref tmpfull, imS, 45, 1.4f);
+                    ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
+                    tmpbmp.Save(fname + "_45" + ".jpg", ImageFormat.Jpeg);
 
-                        Image plus22 = ThumbMaker.RotateImage(res, 22, 1.3f);
-                        plus22.Save(fname + "_22" + ".png", ImageFormat.Png);
-                        plus22.Dispose();
+                    // -45
+                    ThumbMaker.RotateImage(ref tmpfull, imS, -45, 1.4f);
+                    ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
+                    tmpbmp.Save(fname + "_-45" + ".jpg", ImageFormat.Jpeg);
 
-                        Image minus22 = ThumbMaker.RotateImage(res, -22, 1.3f);
-                        minus22.Save(fname + "_-22" + ".png", ImageFormat.Png);
-                        minus22.Dispose();
+                    // +22
+                    ThumbMaker.RotateImage(ref tmpfull, imS, 22, 1.3f);
+                    ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
+                    tmpbmp.Save(fname + "_22" + ".jpg", ImageFormat.Jpeg);
 
-                        res.Dispose();
-                    }
+                    //-22
+                    ThumbMaker.RotateImage(ref tmpfull, imS, -22, 1.3f);
+                    ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
+                    tmpbmp.Save(fname + "_-22" + ".jpg", ImageFormat.Jpeg);
+
+                    /*Image minus45 = ThumbMaker.RotateImage(res, -45, 1.4f);
+                    minus45.Save(fname + "_-45" + ".jpg", ImageFormat.Jpeg);
+                    minus45.Dispose();
+
+                    Image plus22 = ThumbMaker.RotateImage(res, 22, 1.3f);
+                    plus22.Save(fname + "_22" + ".jpg", ImageFormat.Jpeg);
+                    plus22.Dispose();
+
+                    Image minus22 = ThumbMaker.RotateImage(res, -22, 1.3f);
+                    minus22.Save(fname + "_-22" + ".jpg", ImageFormat.Jpeg);
+                    minus22.Dispose();*/
+
+                    //res.Dispose();
+
                     im.Dispose();
+                    tmpfull.Dispose();
                 }
+                tmpbmp.Dispose();
             });
         }
 
-        private static Bitmap ResizeImage(Image image, int thumbsize)
+        private static void ResizeImage(ref Bitmap destImage, Image image, int thumbsize)
         {
             // Crop info
             int x0 = 0;
@@ -111,7 +135,7 @@ namespace mozaic
             }
 
             var destRect = new Rectangle(0, 0, thumbsize, thumbsize);
-            var destImage = new Bitmap(thumbsize, thumbsize);
+            //var destImage = new Bitmap(thumbsize, thumbsize);
 
             destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
@@ -132,13 +156,12 @@ namespace mozaic
                 }
             }
 
-            return destImage;
         }
 
-        public static Image RotateImage(Image img, float rotationAngle, float zoom)
+        public static void RotateImage(ref Bitmap bmp, Image img, float rotationAngle, float zoom)
         {
             //create an empty Bitmap image
-            Bitmap bmp = new Bitmap(img.Width, img.Height);
+            //Bitmap bmp = new Bitmap(img.Width, img.Height);
             bmp.SetResolution(img.HorizontalResolution, img.VerticalResolution);
 
             //turn the Bitmap into a Graphics object
@@ -172,7 +195,7 @@ namespace mozaic
             gfx.Dispose();
 
             //return the image
-            return bmp;
+            //return bmp;
         }
     }
 }

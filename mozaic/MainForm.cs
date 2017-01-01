@@ -89,9 +89,15 @@ namespace mozaic
 
         private async void buttonMakeTiles_Click(object sender, EventArgs e)
         {
+            string title = this.Text;
             var progressHandler = new Progress<int>(value =>
             {
                 progressBarMakeMozaic.Value = value;
+                if (this.Text != value + "%")
+                {
+                    this.Text = value + "%";
+                    this.Refresh();
+                }
             });
             var progress = progressHandler as IProgress<int>;
 
@@ -102,6 +108,8 @@ namespace mozaic
             });
 
             progressBarMakeMozaic.Value = 0;
+            this.Text = title;
+            this.Refresh();
         }
 
         
@@ -139,6 +147,8 @@ namespace mozaic
             foreach (string dir in tileDirs)
             {
                 checkedListBoxTileCollections.Items.Add(dir);
+                // Load webex combo
+                comboBoxWebex.Items.Add(dir);
             }
         }
 
@@ -230,6 +240,46 @@ namespace mozaic
         {
             Properties.Settings.Default.penaltyReuse = (int)numericUpDownPenaltyReuse.Value;
             Properties.Settings.Default.Save();
+        }
+
+        
+        private async void buttonExport2Web_Click(object sender, EventArgs e)
+        {
+            // Create dir on server
+            string dir = comboBoxWebex.SelectedItem.ToString();
+            string res = await WebUploader.createFolder(dir);
+
+            // Get already uploaded tiles
+            string tilesStr = await WebUploader.getUploadedTileNames(dir);
+            string[] alreadyUpFiles = tilesStr.Split('|');
+
+            // Upload tiles
+            Dictionary<string, List < string >>  allTilePaths = mozaic.getTilePaths();
+            List<string> thisDirPaths = allTilePaths[comboBoxWebex.SelectedItem.ToString()];
+            textBoxLog.Text += System.Environment.NewLine + thisDirPaths.Count + " tiles in dir. " + alreadyUpFiles.Length + " already uploaded";
+            float done = 0;
+            int skipped = 0;
+            foreach (string tilePath in thisDirPaths)
+            {
+                if (alreadyUpFiles.Contains(Path.GetFileName(tilePath)))
+                {
+                    skipped++;
+                    continue;
+                }
+                string res2 = await WebUploader.uploadTile(tilePath, dir, Path.GetFileName(tilePath));
+                progressBarMakeMozaic.Value = (int)((done / (float)thisDirPaths.Count) * 100);
+                done += 1;
+            }
+            progressBarMakeMozaic.Value = 0;
+            textBoxLog.Text += System.Environment.NewLine + "Skipped " + skipped + " tiles";
+        }
+
+        private async void buttonGenBinaryFileAndSend_Click(object sender, EventArgs e)
+        {
+            string dir = comboBoxWebex.SelectedItem.ToString();
+            string binFile = mozaic.generateBinaryColorInfo(dir);
+            string res2 = await WebUploader.uploadColorData(binFile, dir, "data.bin");
+            textBoxLog.Text += System.Environment.NewLine + res2;
         }
     }
 }
