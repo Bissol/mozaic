@@ -54,8 +54,9 @@ namespace mozaic
         List<string> tileDirectoriesToUse = null;
         List<string> tilesToUse = null;
 
-        public Mozaic(string tilesPath, string appPath, float wRgbErr, float wIntensityErr, float wRelIntErr)
+        public Mozaic(string tilesPath, string appPath, float wRgbErr, float wIntensityErr, float wRelIntErr, int matchSize)
         {
+            data.matchSize = matchSize;
             data.tilesPath = tilesPath;
             data.appPath = appPath;
 
@@ -133,7 +134,7 @@ namespace mozaic
                 // color regions
                 int numRegions = data.matchSize;
                 bytes.Add((Byte)(numRegions*numRegions));
-                for(int i = 1; i < info.Count; i++)
+                for(int i = 0; i < info.Count; i++)
                 {
                     Color c = Color.FromArgb(info[i]);
                     bytes.Add(c.R);
@@ -298,7 +299,7 @@ namespace mozaic
             bool fastSearch = this.useFastIndex;
             int maxNumColRow = (int)((float)Properties.Settings.Default.nbColRows / (float)8);
             int maxDepth = 2;
-            int destinationSquareSize = Properties.Settings.Default.tileSizeResult;
+            int destinationSquareSize = Properties.Settings.Default.tileSizeResult*2;
             int sourceSquareSize = (int)((float)Math.Max(target.Width, target.Height) / (float)maxNumColRow) + 1;
             float expansionFactor = (float)destinationSquareSize / (float)sourceSquareSize;
             float errorThreshold = 0.5f;

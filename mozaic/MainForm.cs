@@ -115,7 +115,7 @@ namespace mozaic
         
         private async void buttonPrepareMozaic_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
+            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr, Properties.Settings.Default.matchGridSize);
             var progressHandler = new Progress<int>(value =>
             {
                 progressBarMakeMozaic.Value = value;
@@ -139,7 +139,7 @@ namespace mozaic
         // Load data from bin file
         private void buttonLoadColorData_Click(object sender, EventArgs e)
         {
-            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr);
+            mozaic = new Mozaic(Path.Combine(Properties.Settings.Default.appData, "tiles"), Properties.Settings.Default.appData, Properties.Settings.Default.wRgbErr, Properties.Settings.Default.wIntErr, Properties.Settings.Default.wRelIntErr, Properties.Settings.Default.matchGridSize);
             mozaic.loadData();
 
             checkedListBoxTileCollections.Items.Clear();
