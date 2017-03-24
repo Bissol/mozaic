@@ -37,7 +37,7 @@ namespace mozaic
         public void Process(IProgress<int> progress)
         {
             //for (int i = 0; i < this.images.Length; i++)
-            float count = 0;
+            int count = 0;
             var lockTarget = new object();
             float total = this.images.Length;
             Parallel.ForEach(this.images, new ParallelOptions { MaxDegreeOfParallelism = 4 }, imagePath =>
@@ -52,8 +52,8 @@ namespace mozaic
                 string dir = Path.GetDirectoryName(imagePath);// this.images[i]);
                 dir = dir.Replace(this._pathToImages, this.tilesDir);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                string fname = Path.Combine(dir, Path.GetFileNameWithoutExtension(imagePath));//this.images[i]));
-                if (File.Exists(fname + "_tile" + ".jpg")) return;// continue;
+                string fname = Path.Combine(dir, count.ToString());// Path.GetFileNameWithoutExtension(imagePath));//this.images[i]));
+                if (File.Exists(fname + ".jpg")) return;// continue;
 
                 Bitmap tmpbmp = new Bitmap(this.thumbSize, this.thumbSize);
 
@@ -66,28 +66,28 @@ namespace mozaic
 
                     //using (Bitmap res = ThumbMaker.ResizeImage(ref tmpbmp, im, this.thumbSize))
                     ThumbMaker.ResizeImage(ref tmpbmp, imS, this.thumbSize);
-                    string p = fname + "_tile" + ".jpg";
+                    string p = fname + ".jpg";
                     tmpbmp.Save(p, ImageFormat.Jpeg);
 
                     // 45 degrees
                     ThumbMaker.RotateImage(ref tmpfull, imS, 45, 1.4f);
                     ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
-                    tmpbmp.Save(fname + "_45" + ".jpg", ImageFormat.Jpeg);
+                    tmpbmp.Save(fname + "1" + ".jpg", ImageFormat.Jpeg);
 
                     // -45
                     ThumbMaker.RotateImage(ref tmpfull, imS, -45, 1.4f);
                     ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
-                    tmpbmp.Save(fname + "_-45" + ".jpg", ImageFormat.Jpeg);
+                    tmpbmp.Save(fname + "2" + ".jpg", ImageFormat.Jpeg);
 
                     // +22
                     ThumbMaker.RotateImage(ref tmpfull, imS, 22, 1.3f);
                     ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
-                    tmpbmp.Save(fname + "_22" + ".jpg", ImageFormat.Jpeg);
+                    tmpbmp.Save(fname + "3" + ".jpg", ImageFormat.Jpeg);
 
                     //-22
                     ThumbMaker.RotateImage(ref tmpfull, imS, -22, 1.3f);
                     ThumbMaker.ResizeImage(ref tmpbmp, tmpfull, this.thumbSize);
-                    tmpbmp.Save(fname + "_-22" + ".jpg", ImageFormat.Jpeg);
+                    tmpbmp.Save(fname + "4" + ".jpg", ImageFormat.Jpeg);
 
                     /*Image minus45 = ThumbMaker.RotateImage(res, -45, 1.4f);
                     minus45.Save(fname + "_-45" + ".jpg", ImageFormat.Jpeg);

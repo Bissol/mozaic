@@ -35,7 +35,8 @@ namespace mozaic
             bool targetExists = System.IO.File.Exists(textBoxImgTarget.Text);
             if (textBoxImgTarget.Text != "" && targetExists) pictureBoxTargetImage.Image = new Bitmap(Properties.Settings.Default.ImgTargetPath);
 
-            string appdata = "D:/MOZAIC/TILES_METADATA_DATABASE";//Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"mozz");
+            //string appdata = "D:/MOZAIC/TILES_METADATA_DATABASE";//Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"mozz");
+            string appdata = Path.Combine("D:", "MOZAIC", "TILES_METADATA_DATABASE");
             if (!Directory.Exists(appdata)) Directory.CreateDirectory(appdata);
             Properties.Settings.Default.appData = appdata;
         }
