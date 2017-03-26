@@ -16,6 +16,7 @@ namespace mozaic
         private string tilesDir = "";
         public int thumbSize = 150;
         public string _pathToImages;
+        private Dictionary<string, int> folderCount;
 
         public ThumbMaker(string pathToImages, string pathToTiles)
         {
@@ -23,7 +24,10 @@ namespace mozaic
             _pathToImages = pathToImages;
             if (Directory.Exists(_pathToImages))
             {
-                this.images = Directory.GetFiles(_pathToImages, "*.jpg", SearchOption.AllDirectories);
+                string[] extensions = new[] { ".jpg", ".jpeg", ".JPG" };
+                this.images = Directory.GetFiles(_pathToImages, "*.*", SearchOption.AllDirectories)
+                    .Where(s => extensions.Contains(Path.GetExtension(s)))
+                    .ToArray();
                 this.tilesDir = pathToTiles;
 
                 // Create tile dir
@@ -31,6 +35,8 @@ namespace mozaic
                 {
                     Directory.CreateDirectory(this.tilesDir);
                 }
+
+                folderCount = new Dictionary<string, int>();
             }
         }
 
@@ -51,8 +57,20 @@ namespace mozaic
                 progress.Report(percent);
                 string dir = Path.GetDirectoryName(imagePath);// this.images[i]);
                 dir = dir.Replace(this._pathToImages, this.tilesDir);
+                int num = 1;
+                lock (lockTarget)
+                {
+                    if (!folderCount.ContainsKey(dir)) {
+                        folderCount.Add(dir, 1);
+                    }
+                    else
+                    {
+                        folderCount[dir] += 1;
+                        num = folderCount[dir];
+                    }
+                }
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                string fname = Path.Combine(dir, count.ToString());// Path.GetFileNameWithoutExtension(imagePath));//this.images[i]));
+                string fname = Path.Combine(dir, num.ToString());// Path.GetFileNameWithoutExtension(imagePath));//this.images[i]));
                 if (File.Exists(fname + ".jpg")) return;// continue;
 
                 Bitmap tmpbmp = new Bitmap(this.thumbSize, this.thumbSize);
@@ -66,7 +84,7 @@ namespace mozaic
 
                     //using (Bitmap res = ThumbMaker.ResizeImage(ref tmpbmp, im, this.thumbSize))
                     ThumbMaker.ResizeImage(ref tmpbmp, imS, this.thumbSize);
-                    string p = fname + ".jpg";
+                    string p = fname + "0.jpg";
                     tmpbmp.Save(p, ImageFormat.Jpeg);
 
                     // 45 degrees
@@ -119,19 +137,19 @@ namespace mozaic
             int h = 0;
             if (image.Width >= image.Height)
             {
-                int d = (image.Width - image.Height) / 2;
+                int d = (image.Width - image.Height) / 4;
                 x0 = d;
                 y0 = 0;
-                w = image.Height;
+                w = image.Height + d;
                 h = image.Height;
             }
             else
             {
-                int d = (image.Height - image.Width) / 2;
+                int d = (image.Height - image.Width) / 4;
                 x0 = 0;
                 y0 = d;
                 w = image.Width;
-                h = image.Width;
+                h = image.Width + d;
             }
 
             var destRect = new Rectangle(0, 0, thumbsize, thumbsize);

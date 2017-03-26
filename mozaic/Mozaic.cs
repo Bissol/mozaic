@@ -113,28 +113,34 @@ namespace mozaic
 
         public string generateBinaryColorInfo(string dir)
         {
-            int version = 1;
+            int version = 2;
             List<Byte> bytes = new List<byte>();
             List<string> files = data.directories[dir];
 
             // Header
             bytes.Add((Byte)version);
+
             byte[] intBytes = BitConverter.GetBytes(files.Count);
             bytes.AddRange(intBytes);
+
             
-            foreach(string path in files)
+
+            foreach (string path in files)
             {
                 List<int> info = data.colorData[path];
 
-                // name
-                byte[] byteName = Encoding.ASCII.GetBytes(Path.GetFileName(path));
-                bytes.Add((Byte)byteName.Length);
+                // name (now a number)
+                UInt16 namenum = UInt16.Parse(Path.GetFileNameWithoutExtension(path));
+                //byte[] byteName = Encoding.ASCII.GetBytes(Path.GetFileNameWithoutExtension(path));
+                byte[] byteName = BitConverter.GetBytes(namenum);
+                //bytes.Add((Byte)byteName.Length);
                 bytes.AddRange(byteName);
 
                 // color regions
                 int numRegions = data.matchSize;
-                bytes.Add((Byte)(numRegions*numRegions));
-                for(int i = 0; i < info.Count; i++)
+                bytes.Add((Byte)(numRegions * numRegions));
+
+                for (int i = 0; i < info.Count; i++)
                 {
                     Color c = Color.FromArgb(info[i]);
                     bytes.Add(c.R);
